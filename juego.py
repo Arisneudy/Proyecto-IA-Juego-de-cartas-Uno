@@ -1,3 +1,6 @@
+import self
+
+import jugador
 from carta import Comodin, Carta, CartaAccion
 from mazo import Mazo
 from jugador import Jugador
@@ -71,7 +74,7 @@ class Juego:
         print("Seleccione una carta válida")
         return False
 
-    def movimiento_de_jugador(self, jugador):
+    def movimiento_de_jugador(self, jugador, jugadores):
         print(f"{jugador.nombre}, elige una acción:")
         #TODO: IMPLEMENTAR LA TOMA DE CARTA DEL MAZO - DONY
         print("1. Tomar una carta del mazo.")
@@ -143,8 +146,23 @@ class Juego:
                     print("La pila está vacía.")
             elif opcion == "4":
                 self.mostrar_cartas(jugador)
+
+            elif opcion == "5":
+                if len(jugador.cartas) == 1:
+                    print(f"{jugador.nombre} grita '¡UNO!'")
+                else:
+                    print("¡Oops! ¡Solo puedes gritar 'UNO' cuando tienes una sola carta en la mano!")
+
+                for jugador_iter in jugadores:
+                    if len(jugador_iter.cartas) == 1 and jugador_iter != jugador_iter:
+                        opcion = input(f"{jugador_iter.nombre} ha atrapado a {jugador_iter.nombre} sin gritar 'UNO'. ¿Quieres gritar '¡UNO!'? (s/n): ")
+                        if opcion.lower() == "s":
+                            print(f"{jugador_iter.nombre} grita '¡UNO!'")
+                            print(f"{jugador_iter.nombre} debe robar dos cartas adicionales.")
+                            self.repartir_cartas([jugador_iter, jugador_iter])
+
             else:
-                print("Opción inválida. Por favor, selecciona 1, 2, 3 o 4.")
+                print("Opción inválida. Por favor, selecciona 1, 2, 3, 4 o 5.")
 
     def mostrar_cartas(self, jugador):
         print(f"Cartas de {jugador.nombre}:")
@@ -173,75 +191,11 @@ class Juego:
 
         while is_active_game:
             print(f"Turno del jugador {current_player + 1}:")
-            self.movimiento_de_jugador(jugadores[current_player])
+            self.movimiento_de_jugador(jugadores[current_player], jugadores)
 
             current_player += 1
 
             if current_player == len(jugadores):
                 current_player = 0
-
-    
-    def movimiento_de_jugador(self, jugador_iter):
-     print(f"{jugador_iter.nombre}, elige una acción:")
-    
-    player_round = True
-    while player_round:
-        opcion = input("Selecciona una opción: ")
-        if opcion == "1":
-            if self.mazo.cartas:
-                carta = self.mazo.cartas.pop(0)
-                jugador_iter.cartas.append(carta)
-                print(f"{jugador_iter.nombre} tomó una carta del mazo.")
-                print(f"{jugador_iter.nombre}. ¿Que desea hacer?")
-
-                player_thinking = True
-                while player_thinking:
-                    print("1. Dejar carta")
-                    print("2. Ver la pila.")
-                    print("3. Ver mis cartas.")
-                    movimiento_de_jugador = input("Seleccione una opcion: ")
-
-                    if movimiento_de_jugador == "1":
-                        self.mostrar_cartas(jugador_iter)
-
-                        seleccionando_carta = True
-                        while seleccionando_carta:
-                            opcion_descartar = input("Seleccione el número de la carta que desea descartar: ")
-                            if self.validar_y_descartar_carta(jugador, opcion_descartar):
-                                if len(jugador_iter.cartas) == 1: 
-                                    print(f"{jugador_iter.nombre} grita '¡UNO!'")
-                                player_round = False
-                                player_thinking = False
-                                break
-                    if movimiento_de_jugador == "2":
-                        if self.pila.cartas:
-                            print(self.pila.cartas[-1])
-                            print("==========")
-                        else:
-                            print("La pila está vacía.")
-                        continue
-                    if movimiento_de_jugador == "3":
-                        if self.pila.cartas:
-                            print(self.pila.cartas[-1])
-                            print("==========")
-                        else:
-                            print("La pila está vacía.")
-                        self.mostrar_cartas(jugador_iter)
-                        continue
-            else:
-                print("El mazo está vacío.")
-        elif opcion == "5":  
-            if len(jugador_iter.cartas) == 1:  
-                print(f"{jugador_iter.nombre} grita '¡UNO!'")
-            else:
-                print("¡Oops! ¡Solo puedes gritar 'UNO' cuando tienes una sola carta en la mano!")
-        
-        for jugador_iter in jugador_iter:
-            if len(jugador_iter.cartas) == 1 and jugador_iter != jugador_iter: 
-                opcion = input(f"{jugador_iter.nombre} ha atrapado a {jugador_iter.nombre} sin gritar 'UNO'. ¿Quieres gritar '¡UNO!'? (s/n): ")
-                if opcion.lower() == "s":
-                    print(f"{jugador_iter.nombre} grita '¡UNO!'")
-                    print(f"{jugador_iter.nombre} debe robar dos cartas adicionales.")
-                    self.repartir_cartas([jugador_iter, jugador_iter])  
         
 
