@@ -11,7 +11,7 @@ class Juego:
         self.pila = Pila()
 
     def obtener_primera_carta(self):
-        self.mazo.barajar()
+        self.mazo.primerabaraja()
         primera_carta = self.mazo.cartas.pop(0)
         self.pila.cartas.append(primera_carta)
 
