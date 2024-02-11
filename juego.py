@@ -1,3 +1,4 @@
+from carta import Comodin, Carta, CartaAccion
 from mazo import Mazo
 from jugador import Jugador
 from pila import Pila
@@ -33,11 +34,36 @@ class Juego:
             jugador_actual.cartas.append(carta)
             cartas_repartidas += 1
 
+    def es_carta_valida_para_descartar(self, carta_descartar):
+        carta_en_pila = self.pila.cartas[-1]
 
+        if isinstance(carta_descartar, Comodin):
+            return True
+
+        if isinstance(carta_descartar, CartaAccion):
+            return carta_descartar.color == carta_en_pila.color or isinstance(carta_en_pila, CartaAccion)
+
+        if isinstance(carta_descartar, Carta) and not (
+                isinstance(carta_en_pila, CartaAccion) or isinstance(carta_en_pila, Comodin)):
+            return carta_descartar.color == carta_en_pila.color or carta_descartar.valor == carta_en_pila.valor
+
+        if isinstance(carta_descartar, CartaAccion):
+            return True
+
+        return False
+
+    # TODO: COMPLETAR VALIDACIONES - ARISNEUDY
     def validar_y_descartar_carta(self, jugador, opcion_descartar):
         if opcion_descartar.isdigit():
             opcion_descartar = int(opcion_descartar) - 1
             if not (opcion_descartar < 0 or opcion_descartar >= len(jugador.cartas)):
+                # Validar si la carta es un comodin
+                # Validar si es una carta accion
+                # Validar si la carta accion es del mismo color de la carta de la pila o si hay otra carta
+                # accion del mismo tipo en la pila
+                # Validar la es posible dejar la carta solicitada en la pila, por color o numero
+                # Si no es posible continue with the cycle
+
                 carta_descartar = jugador.cartas.pop(opcion_descartar)
                 self.pila.agregar_carta(carta_descartar)
                 print(f"{jugador.nombre} descartó la carta: {carta_descartar}")
@@ -47,10 +73,13 @@ class Juego:
 
     def movimiento_de_jugador(self, jugador):
         print(f"{jugador.nombre}, elige una acción:")
+        #TODO: IMPLEMENTAR LA TOMA DE CARTA DEL MAZO - DONY
         print("1. Tomar una carta del mazo.")
         print("2. Dejar una carta")
         print("3. Ver la pila.")
         print("4. Ver mis cartas.")
+        #TODO: IMPLEMENTAR LA OPCION DE CANTAR UNO - ASHANTY
+        print("5. Cantar UNO")
 
         player_round = True
         while player_round:
@@ -105,13 +134,6 @@ class Juego:
                     if self.validar_y_descartar_carta(jugador, opcion_descartar):
                         player_round = False
                         break
-
-                # Validar si la carta es un comodin
-                # Validar si es una carta accion
-                # Validar si la carta accion es del mismo color de la carta de la pila o si hay otra carta
-                # accion del mismo tipo en la pila
-                # Validar la es posible dejar la carta solicitada en la pila, por color o numero
-                # Si no es posible continue with the cycle
             elif opcion == "3":
                 if self.pila.cartas:
                     print(self.pila.cartas[-1])

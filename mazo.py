@@ -13,7 +13,7 @@ class Mazo:
 
         colores = ['Rojo', 'Azul', 'Verde', 'Amarillo']
         valores = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-        acciones = ['Reversa', 'Salto', '+2']
+        acciones = ['Reversa', 'Ø', '+2']
         comodines = ['+4', 'Comodin']
 
         for color in colores:
