@@ -3,7 +3,6 @@ from mazo import Mazo
 from jugador import Jugador
 from pila import Pila
 
-
 class Juego:
     def __init__(self):
         self.mazo = Mazo()
@@ -16,6 +15,7 @@ class Juego:
 
     def obtener_jugadores(self):
         while True:
+
             number_of_players = input("¿Cuantas personas juegan? (2-4): ")
             if number_of_players.isdigit():
                 number_of_players = int(number_of_players)
@@ -47,27 +47,21 @@ class Juego:
                 isinstance(carta_en_pila, CartaAccion) or isinstance(carta_en_pila, Comodin)):
             return carta_descartar.color == carta_en_pila.color or carta_descartar.valor == carta_en_pila.valor
 
-        if isinstance(carta_descartar, CartaAccion):
-            return True
-
         return False
 
     # TODO: COMPLETAR VALIDACIONES - ARISNEUDY
     def validar_y_descartar_carta(self, jugador, opcion_descartar):
         if opcion_descartar.isdigit():
             opcion_descartar = int(opcion_descartar) - 1
-            if not (opcion_descartar < 0 or opcion_descartar >= len(jugador.cartas)):
-                # Validar si la carta es un comodin
-                # Validar si es una carta accion
-                # Validar si la carta accion es del mismo color de la carta de la pila o si hay otra carta
-                # accion del mismo tipo en la pila
-                # Validar la es posible dejar la carta solicitada en la pila, por color o numero
-                # Si no es posible continue with the cycle
+            if 0 <= opcion_descartar < len(jugador.cartas):
+                carta_descartar = jugador.cartas[opcion_descartar]
 
-                carta_descartar = jugador.cartas.pop(opcion_descartar)
-                self.pila.agregar_carta(carta_descartar)
-                print(f"{jugador.nombre} descartó la carta: {carta_descartar}")
-                return True
+                if self.es_carta_valida_para_descartar(carta_descartar):
+                    jugador.cartas.remove(carta_descartar)
+                    self.pila.agregar_carta(carta_descartar)
+                    print(f"{jugador.nombre} descartó la carta: {carta_descartar}")
+                    return True
+
         print("Seleccione una carta válida")
         return False
 
