@@ -1,10 +1,4 @@
-<<<<<<< HEAD
-import self
-
-import jugador
-=======
 import time
->>>>>>> 4a6e9e0dba8da441b4a3ed8cb3c4d0a666f6dd47
 from carta import Comodin, Carta, CartaAccion
 from mazo import Mazo
 from jugador import Jugador
@@ -211,5 +205,3 @@ class Juego:
 
             if current_player == len(jugadores):
                 current_player = 0
-        
-
