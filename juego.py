@@ -67,14 +67,15 @@ class Juego:
         return False
 
     def movimiento_de_jugador(self, jugador, jugadores):
+        print("La carta encima de la pila es:", self.pila.cartas[-1])
+        print("==========")
         print(f"{jugador.nombre}, elige una acción:")
         #TODO: IMPLEMENTAR LA TOMA DE CARTA DEL MAZO - DONY
         print("1. Tomar una carta del mazo.")
         print("2. Dejar una carta")
-        print("3. Ver la pila.")
-        print("4. Ver mis cartas.")
+        print("3. Ver mis cartas.")
         #TODO: IMPLEMENTAR LA OPCION DE CANTAR UNO - ASHANTY
-        print("5. Cantar UNO")
+        print("4. Cantar UNO")
 
         player_round = True
         while player_round:
@@ -140,16 +141,9 @@ class Juego:
                         player_round = False
                         break
             elif opcion == "3":
-                if self.pila.cartas:
-                    print(self.pila.cartas[-1])
-                    print("==========")
-                    continue
-                else:
-                    print("La pila está vacía.")
-            elif opcion == "4":
                 self.mostrar_cartas(jugador)
 
-            elif opcion == "5":
+            elif opcion == "4":
                 if len(jugador.cartas) == 1:
                     print(f"{jugador.nombre} grita '¡UNO!'")
                 else:
@@ -164,7 +158,7 @@ class Juego:
                             self.repartir_cartas([jugador_iter, jugador_iter])
 
             else:
-                print("Opción inválida. Por favor, selecciona 1, 2, 3, 4 o 5.")
+                print("Opción inválida. Por favor, selecciona 1, 2, 3 o 4.")
 
     def mostrar_cartas(self, jugador):
         print(f"Cartas de {jugador.nombre}:")
