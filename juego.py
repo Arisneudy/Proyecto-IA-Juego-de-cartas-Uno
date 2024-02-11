@@ -1,3 +1,4 @@
+import time
 from carta import Comodin, Carta, CartaAccion
 from mazo import Mazo
 from jugador import Jugador
@@ -87,10 +88,20 @@ class Juego:
             if opcion == "1":
                 if self.mazo.cartas:
                     carta = self.mazo.cartas.pop(0)
-                    jugador.cartas.append(carta)
-                    print(f"{jugador.nombre} tomó una carta del mazo.")
-                    print(f"{jugador.nombre}. ¿Que desea hacer?")
+                    if len(self.mazo.cartas) != 0:
+                        jugador.cartas.append(carta)
+                        print(f"{jugador.nombre} tomó una carta del mazo.")
+                        print(f"{jugador.nombre}. ¿Que desea hacer?")
+                    else:
+                        print("El mazo está vacío, se está barajando la pila...")
+                        self.pila.barajar()
+                        self.mazo.cartas.extend(self.pila.cartas[1:])
+                        self.pila.cartas[1:] =[]
+                        time.sleep(2)
+                        print("Pila barajada y agregada al mazo.")
+                        self.movimiento_de_jugador(jugador)
 
+                                
                     player_thinking = True
                     while player_thinking:
                         print("1. Dejar carta")
@@ -143,6 +154,16 @@ class Juego:
                     print("La pila está vacía.")
             elif opcion == "4":
                 self.mostrar_cartas(jugador)
+            elif opcion == "5":
+                print(len(self.mazo.cartas))
+            elif opcion == "6":
+                print("El mazo está vacío, se está barajando la pila.")
+                self.pila.barajar()
+                self.mazo.cartas.extend(self.pila.cartas[1:])
+                self.pila.cartas[1:] =[]
+                time.sleep(2)
+                print("Pila barajada y agregada al mazo.")
+                self.movimiento_de_jugador(jugador)
             else:
                 print("Opción inválida. Por favor, selecciona 1, 2, 3 o 4.")
 

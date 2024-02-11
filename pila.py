@@ -1,3 +1,6 @@
+import random
+
+
 class Pila:
     def __init__(self):
         self.cartas = []
@@ -10,3 +13,5 @@ class Pila:
             return self.cartas.pop()
         else:
             return None
+    def barajar(self):
+        random.shuffle(self.cartas)
