@@ -2,6 +2,7 @@ from mazo import Mazo
 from jugador import Jugador
 from pila import Pila
 
+
 class Juego:
     def __init__(self):
         self.mazo = Mazo()
@@ -32,6 +33,18 @@ class Juego:
             jugador_actual.cartas.append(carta)
             cartas_repartidas += 1
 
+
+    def validar_y_descartar_carta(self, jugador, opcion_descartar):
+        if opcion_descartar.isdigit():
+            opcion_descartar = int(opcion_descartar) - 1
+            if not (opcion_descartar < 0 or opcion_descartar >= len(jugador.cartas)):
+                carta_descartar = jugador.cartas.pop(opcion_descartar)
+                self.pila.agregar_carta(carta_descartar)
+                print(f"{jugador.nombre} descartó la carta: {carta_descartar}")
+                return True
+        print("Seleccione una carta válida")
+        return False
+
     def movimiento_de_jugador(self, jugador):
         print(f"{jugador.nombre}, elige una acción:")
         print("1. Tomar una carta del mazo.")
@@ -39,7 +52,8 @@ class Juego:
         print("3. Ver la pila.")
         print("4. Ver mis cartas.")
 
-        while True:
+        player_round = True
+        while player_round:
             opcion = input("Selecciona una opción: ")
             if opcion == "1":
                 if self.mazo.cartas:
@@ -60,24 +74,11 @@ class Juego:
 
                             seleccionando_carta = True
                             while seleccionando_carta:
-                                opcion_descartar = input()
-                                if opcion_descartar.isdigit():
-                                    carta_descartar = jugador.cartas.pop(int(opcion_descartar) - 1)
-                                    self.pila.agregar_carta(carta_descartar)
-                                    print(f"{jugador.nombre} descartó la carta: {carta_descartar}")
-
-                                    # Validar si la carta es un comodin
-                                    # Validar si es una carta accion
-                                    # Validar si la carta accion es del mismo color de la carta de la pila o si hay otra carta
-                                    # accion del mismo tipo en la pila
-                                    # Validar la es posible dejar la carta solicitada en la pila, por color o numero
-                                    # Si no es posible continue with the cycle
+                                opcion_descartar = input("Seleccione el número de la carta que desea descartar: ")
+                                if self.validar_y_descartar_carta(jugador, opcion_descartar):
+                                    player_round = False
                                     player_thinking = False
                                     break
-                                else:
-                                    print("Seleccione una carta valida")
-                                continue
-                            continue
                         if movimiento_de_jugador == "2":
                             if self.pila.cartas:
                                 print(self.pila.cartas[-1])
@@ -93,36 +94,17 @@ class Juego:
                                 print("La pila está vacía.")
                             self.mostrar_cartas(jugador)
                             continue
-
-                        print("Opción inválida. Por favor, selecciona 1, 2, 3 o 4.")
-                        continue
                 else:
                     print("El mazo está vacío.")
 
-            if opcion == "2":
+            elif opcion == "2":
                 self.mostrar_cartas(jugador)
                 seleccionando_carta = True
                 while seleccionando_carta:
-                    opcion_descartar = input()
-                    if opcion_descartar.isdigit():
-                        if len(jugador.cartas) < int(opcion_descartar) - 1:
-                            print("Seleccione una carta valida")
-                            break
-
-                        carta_descartar = jugador.cartas.pop(int(opcion_descartar) - 1)
-                        self.pila.agregar_carta(carta_descartar)
-                        print(f"{jugador.nombre} descartó la carta: {carta_descartar}")
-
-                        # Validar si la carta es un comodin
-                        # Validar si es una carta accion
-                        # Validar si la carta accion es del mismo color de la carta de la pila o si hay otra carta
-                        # accion del mismo tipo en la pila
-                        # Validar la es posible dejar la carta solicitada en la pila, por color o numero
-                        # Si no es posible continue with the cycle
+                    opcion_descartar = input("Seleccione el número de la carta que desea descartar: ")
+                    if self.validar_y_descartar_carta(jugador, opcion_descartar):
+                        player_round = False
                         break
-                    else:
-                        print("Seleccione una carta valida")
-                    continue
 
                 # Validar si la carta es un comodin
                 # Validar si es una carta accion
@@ -130,15 +112,14 @@ class Juego:
                 # accion del mismo tipo en la pila
                 # Validar la es posible dejar la carta solicitada en la pila, por color o numero
                 # Si no es posible continue with the cycle
-                break
-            if opcion == "3":
+            elif opcion == "3":
                 if self.pila.cartas:
                     print(self.pila.cartas[-1])
                     print("==========")
                     continue
                 else:
                     print("La pila está vacía.")
-            if opcion == "4":
+            elif opcion == "4":
                 self.mostrar_cartas(jugador)
             else:
                 print("Opción inválida. Por favor, selecciona 1, 2, 3 o 4.")
@@ -159,7 +140,6 @@ class Juego:
                 break
             else:
                 print("Opción inválida. Por favor, elige un número entre 1 y 6.")
-
 
     def iniciar(self):
         self.obtener_primera_carta()
