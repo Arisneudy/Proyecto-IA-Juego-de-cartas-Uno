@@ -38,9 +38,6 @@ class Mazo:
     def barajar(self):
         random.shuffle(self.cartas)
 
-    def primerabaraja(self):
-        random.shuffle(self.cartas_numeradas)
-        
     def imprimir_mazo(self):
         for carta in self.cartas:
             print(carta)

@@ -11,7 +11,7 @@ class Juego:
         self.pila = Pila()
 
     def obtener_primera_carta(self):
-        self.mazo.primerabaraja()
+        self.mazo.barajar()
         primera_carta = self.mazo.cartas.pop(0)
         self.pila.cartas.append(primera_carta)
 
@@ -154,16 +154,6 @@ class Juego:
                     print("La pila está vacía.")
             elif opcion == "4":
                 self.mostrar_cartas(jugador)
-            elif opcion == "5":
-                print(len(self.mazo.cartas))
-            elif opcion == "6":
-                print("El mazo está vacío, se está barajando la pila.")
-                self.pila.barajar()
-                self.mazo.cartas.extend(self.pila.cartas[1:])
-                self.pila.cartas[1:] =[]
-                time.sleep(2)
-                print("Pila barajada y agregada al mazo.")
-                self.movimiento_de_jugador(jugador)
             else:
                 print("Opción inválida. Por favor, selecciona 1, 2, 3 o 4.")
 
