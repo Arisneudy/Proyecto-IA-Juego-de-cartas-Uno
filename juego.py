@@ -41,7 +41,7 @@ class Juego:
             return True
 
         if isinstance(carta_descartar, CartaAccion):
-            return carta_descartar.color == carta_en_pila.color or isinstance(carta_en_pila, CartaAccion)
+            return carta_descartar.color == carta_en_pila.color or carta_descartar.accion == carta_en_pila.accion
 
         if isinstance(carta_descartar, Carta) and not (
                 isinstance(carta_en_pila, CartaAccion) or isinstance(carta_en_pila, Comodin)):
