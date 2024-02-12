@@ -3,12 +3,14 @@ from carta import Comodin, Carta, CartaAccion
 from mazo import Mazo
 from jugador import Jugador
 from pila import Pila
+from Herramientas import limpiar
 
 
 class Juego:
     def __init__(self):
         self.mazo = Mazo()
         self.pila = Pila()
+        self.color_pila = None
 
     def obtener_primera_carta(self):
         self.mazo.barajar()
@@ -62,18 +64,35 @@ class Juego:
 
         return False
 
-    # TODO: COMPLETAR VALIDACIONES - ARISNEUDY
     def validar_y_descartar_carta(self, jugador, opcion_descartar):
         if opcion_descartar.isdigit():
             opcion_descartar = int(opcion_descartar) - 1
             if 0 <= opcion_descartar < len(jugador.cartas):
                 carta_descartar = jugador.cartas[opcion_descartar]
 
-                if self.es_carta_valida_para_descartar(carta_descartar):
+                if isinstance(carta_descartar, Comodin):
                     jugador.cartas.remove(carta_descartar)
                     self.pila.agregar_carta(carta_descartar)
                     print(f"{jugador.nombre} descartó la carta: {carta_descartar}")
                     return True
+
+                if self.color_pila is not None:
+                    if carta_descartar.color == self.color_pila:
+                        jugador.cartas.remove(carta_descartar)
+                        self.pila.agregar_carta(carta_descartar)
+                        print(f"{jugador.nombre} descartó la carta: {carta_descartar}")
+
+                        self.color_pila = None
+                        return True
+                    else:
+                        print("Debe jugar una carta del color de la pila.")
+                        return False
+                else:
+                    if self.es_carta_valida_para_descartar(carta_descartar):
+                        jugador.cartas.remove(carta_descartar)
+                        self.pila.agregar_carta(carta_descartar)
+                        print(f"{jugador.nombre} descartó la carta: {carta_descartar}")
+                        return True
 
         print("Seleccione una carta válida")
         return False
@@ -123,6 +142,7 @@ class Juego:
 
                             seleccionando_carta = True
                             while seleccionando_carta:
+                                # TODO: FIX THIS
                                 opcion_descartar = input("Seleccione el número de la carta que desea descartar: ")
                                 if self.validar_y_descartar_carta(jugador, opcion_descartar):
                                     player_round = False
@@ -150,6 +170,7 @@ class Juego:
                 self.mostrar_cartas(jugador)
                 seleccionando_carta = True
                 while seleccionando_carta:
+                    #TODO: FIX THIS
                     opcion_descartar = input("Seleccione el número de la carta que desea descartar: ")
                     if self.validar_y_descartar_carta(jugador, opcion_descartar):
                         player_round = False
@@ -201,6 +222,8 @@ class Juego:
 
         while True:
             print(f"Turno del jugador {current_player + 1}:")
+            limpiar.clear_console()
+
             self.movimiento_de_jugador(jugadores[current_player], jugadores)
 
             carta_ultima_jugada = self.pila.cartas[-1]
@@ -221,8 +244,10 @@ class Juego:
                             jugadores[current_player + 1].cartas.append(carta)
 
                     current_player += 1
-                    print(f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} se le añaden dos cartas.")
-                    print(f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} pierde su turno.")
+                    print(
+                        f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} se le añaden dos cartas.")
+                    print(
+                        f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} pierde su turno.")
 
             if isinstance(carta_ultima_jugada, Comodin):
                 if carta_ultima_jugada.valor == "+4":
@@ -234,23 +259,36 @@ class Juego:
                             jugadores[current_player + 1].cartas.append(carta)
 
                     current_player += 1
-                    print(f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} se le añaden dos cartas.")
-                    print(f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} pierde su turno.")
+                    print(
+                        f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} se le añaden dos cartas.")
+                    print(
+                        f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} pierde su turno.")
 
-                    # while True:
-                    #     color_option = input("¿Hacia cual color cambia la pila?")
-                    #     print("1. Rojo")
-                    #     print("2. Azul")
-                    #     print("3. Verde")
-                    #     print("4. Amarillo")
-                    #
-                    #     if color_option.isdigit():
-                    #         color_option = int(color_option)
-                    #         if color_option == 1:
-                    #             Carta()
-                    #         continue
-                    #     else:
-                    #         print("Ingrese una opcion valida (1, 2, 3 o 4)")
-                    #         continue
+                    print("Seleccione el color para cambiar la pila:")
+                    print("1. Rojo")
+                    print("2. Azul")
+                    print("3. Verde")
+                    print("4. Amarillo")
+
+                    while True:
+                        color_option = input("Elija una opción: ")
+                        if color_option.isdigit():
+                            color_option = int(color_option)
+                            if 1 <= color_option <= 4:
+                                if color_option == 1:
+                                    self.color_pila = "Rojo"
+                                elif color_option == 2:
+                                    self.color_pila = "Azul"
+                                elif color_option == 3:
+                                    self.color_pila = "Verde"
+                                elif color_option == 4:
+                                    self.color_pila = "Amarillo"
+
+                                print(f"La pila ha cambiado de color a {self.color_pila}.")
+                                break
+                            else:
+                                print("Ingrese una opción válida (1, 2, 3 o 4)")
+                        else:
+                            print("Ingrese una opción válida (1, 2, 3 o 4)")
 
             current_player = (current_player + 1) % len(jugadores)
