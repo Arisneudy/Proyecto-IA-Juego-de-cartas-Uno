@@ -133,7 +133,7 @@ class Juego:
                         print("| 0. Salir del juego                         |")
                         print("| __________________________________________ |")
                         print()
-        
+
                     else:
                         print("El mazo está vacío, se está barajando la pila...")
                         self.pila.barajar()
@@ -145,13 +145,32 @@ class Juego:
 
                     player_thinking = True
                     while player_thinking:
-
                         movimiento_de_jugador = input("Seleccione una opción: ")
                         if movimiento_de_jugador == "1":
                             if self.mazo.cartas:
                                 carta = self.mazo.cartas.pop(0)
                                 jugador.cartas.append(carta)
-
+                                limpiar.clear_console()
+                                print()
+                                print(" ~ La carta encima de la pila es:", ultima_carta_de_la_pila, " ~")
+                                print()
+                                print("| ------------------------------------------ |")
+                                print(f"| {jugador.nombre} tomó una carta del mazo          |")
+                                print("| ------------------------------------------ |")
+                                print()
+                                print(" La carta tomada del mazo es:", carta)
+                                print()
+                                print("| ------------------------------------------ |")
+                                print(f"| {jugador.nombre}, elige una acción:               |")
+                                print("| ------------------------------------------ |")
+                                print("| 1. Tomar una carta del mazo                |")
+                                print("| 2. Dejar una carta                         |")
+                                print("| 3. Ver mis cartas                          |")
+                                print("| 4. Cantar UNO                              |")
+                                print("| 0. Salir del juego                         |")
+                                print("| __________________________________________ |")
+                                print()
+                                break
                             else:
                                 print("El mazo está vacío.")
                         elif movimiento_de_jugador == "2":
@@ -162,11 +181,22 @@ class Juego:
                                     "atrás: ")
                                 if opcion_descartar == '0':
                                     limpiar.clear_console()
-                                    print("Perdiste tu turno")
+                                    print("| ------------------------------------------ |")
                                     print()
-                                    input("Presiona enter para continuar....")
-                                    return
-                                    
+                                    print(" ~ La carta encima de la pila es:", ultima_carta_de_la_pila, " ~")
+                                    print()
+                                    print("| ------------------------------------------ |")
+                                    print(f"| {jugador.nombre}, elige una acción:               |")
+                                    print("| ------------------------------------------ |")
+                                    print("| 1. Tomar una carta del mazo                |")
+                                    print("| 2. Dejar una carta                         |")
+                                    print("| 3. Ver mis cartas                          |")
+                                    print("| 4. Cantar UNO                              |")
+                                    print("| 0. Salir del juego                         |")
+                                    print("| __________________________________________ |")
+                                    print()
+                                    break
+
                                 if self.validar_y_descartar_carta(jugador, opcion_descartar):
                                     player_round = False
                                     player_thinking = False
@@ -192,7 +222,7 @@ class Juego:
                                 print("| 0. Salir del juego                         |")
                                 print("| __________________________________________ |")
                                 print()
-                                
+
                             else:
                                 print("La pila está vacía.")
                         elif movimiento_de_jugador == "4":
@@ -211,10 +241,21 @@ class Juego:
                         "Seleccione el número de la carta que desea descartar o ingrese '0' para volver atrás: ")
                     if opcion_descartar == '0':
                         limpiar.clear_console()
-                        print("Perdiste tu turno")
+                        print("| ------------------------------------------ |")
                         print()
-                        input("Presiona enter para continuar....")
-                        return
+                        print(" ~ La carta encima de la pila es:", ultima_carta_de_la_pila, " ~")
+                        print()
+                        print("| ------------------------------------------ |")
+                        print(f"| {jugador.nombre}, elige una acción:               |")
+                        print("| ------------------------------------------ |")
+                        print("| 1. Tomar una carta del mazo                |")
+                        print("| 2. Dejar una carta                         |")
+                        print("| 3. Ver mis cartas                          |")
+                        print("| 4. Cantar UNO                              |")
+                        print("| 0. Salir del juego                         |")
+                        print("| __________________________________________ |")
+                        print()
+                        break
                     if self.validar_y_descartar_carta(jugador, opcion_descartar):
                         player_round = False
                         break
@@ -263,6 +304,9 @@ class Juego:
 
     def mostrar_cartas(self, jugador):
         limpiar.clear_console()
+        print()
+        print(" ~ La carta encima de la pila es:", self.pila.cartas[-1], " ~")
+        print()
         print(f"Cartas de {jugador.nombre}:")
         print()
         for i, carta in enumerate(jugador.cartas, 1):
