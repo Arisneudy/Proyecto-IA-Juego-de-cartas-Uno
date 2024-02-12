@@ -235,26 +235,30 @@ class Juego:
 
         while True:
             print(f"Turno del jugador {current_player + 1}:")
+            ultima_carta_jugada = self.pila.cartas[-1]
             limpiar.clear_console()
 
             self.movimiento_de_jugador(jugadores[current_player], jugadores)
 
-            carta_ultima_jugada = self.pila.cartas[-1]
+            for jugador in jugadores:
+                if len(jugador.cartas) == 0:
+                    print(f"¡{jugador.nombre} ha ganado el juego!")
+                    return
 
-            if isinstance(carta_ultima_jugada, CartaAccion):
-                if carta_ultima_jugada.accion == "Reversa" and len(jugadores) == 2:
+            if isinstance(ultima_carta_jugada, CartaAccion):
+                if ultima_carta_jugada.accion == "Reversa" and len(jugadores) == 2:
                     current_player = (current_player + 1) % len(jugadores)
-                if carta_ultima_jugada.accion == "Reversa":
+                if ultima_carta_jugada.accion == "Reversa":
                     jugadores = jugadores[::-1]
                     if current_player == 0:
                         current_player = len(jugadores) - 1
                     else:
                         current_player -= 1
-                if carta_ultima_jugada.accion == "Ø":
+                if ultima_carta_jugada.accion == "Ø":
                     current_player += 1
                     print(
                         f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} pierde su turno.")
-                if carta_ultima_jugada.accion == "+2":
+                if ultima_carta_jugada.accion == "+2":
                     for _ in range(2):
                         carta = self.mazo.cartas.pop(1)
                         if current_player + 1 >= len(jugadores):
@@ -268,8 +272,8 @@ class Juego:
                     print(
                         f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} pierde su turno.")
 
-            if isinstance(carta_ultima_jugada, Comodin):
-                if carta_ultima_jugada.valor == "+4":
+            if isinstance(ultima_carta_jugada, Comodin):
+                if ultima_carta_jugada.valor == "+4":
                     for _ in range(4):
                         carta = self.mazo.cartas.pop(1)
                         if current_player + 1 >= len(jugadores):
@@ -310,7 +314,7 @@ class Juego:
                         else:
                             print("Ingrese una opción válida (1, 2, 3 o 4)")
 
-                elif carta_ultima_jugada.valor == "Comodin":
+                elif ultima_carta_jugada.valor == "Comodin":
                     print("Seleccione el color para cambiar la pila:")
                     print("1. Rojo")
                     print("2. Azul")
