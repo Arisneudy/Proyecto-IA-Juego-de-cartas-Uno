@@ -4,6 +4,7 @@ from mazo import Mazo
 from jugador import Jugador
 from pila import Pila
 
+
 class Juego:
     def __init__(self):
         self.mazo = Mazo()
@@ -34,14 +35,13 @@ class Juego:
             jugador_actual = jugadores[cartas_repartidas % len(jugadores)]
             jugador_actual.cartas.append(carta)
             cartas_repartidas += 1
-            
+
     def es_carta_valida_para_descartar(self, carta_descartar):
         carta_en_pila = self.pila.cartas[-1]
 
-
         if isinstance(carta_descartar, Comodin):
             return True
-        
+
         if isinstance(carta_en_pila, Comodin):
             return True
 
@@ -52,7 +52,7 @@ class Juego:
                 return True
             else:
                 return carta_descartar.color == carta_en_pila.color
-        
+
         if isinstance(carta_descartar, Carta) and not (
                 isinstance(carta_en_pila, CartaAccion) or isinstance(carta_en_pila, Comodin)):
             return carta_descartar.color == carta_en_pila.color or carta_descartar.valor == carta_en_pila.valor
@@ -62,13 +62,12 @@ class Juego:
 
         return False
 
-
     # TODO: COMPLETAR VALIDACIONES - ARISNEUDY
     def validar_y_descartar_carta(self, jugador, opcion_descartar):
         if opcion_descartar.isdigit():
             opcion_descartar = int(opcion_descartar) - 1
             if 0 <= opcion_descartar < len(jugador.cartas):
-                carta_descartar = jugador.cartas[opcion_descartar] 
+                carta_descartar = jugador.cartas[opcion_descartar]
 
                 if self.es_carta_valida_para_descartar(carta_descartar):
                     jugador.cartas.remove(carta_descartar)
@@ -81,15 +80,15 @@ class Juego:
 
     def movimiento_de_jugador(self, jugador, jugadores):
         ultima_carta_de_la_pila = self.pila.cartas[-1]
-        
+
         print("La carta encima de la pila es:", ultima_carta_de_la_pila)
         print("==========")
         print(f"{jugador.nombre}, elige una acción:")
-        #TODO: IMPLEMENTAR LA TOMA DE CARTA DEL MAZO - DONY
+        # TODO: IMPLEMENTAR LA TOMA DE CARTA DEL MAZO - DONY
         print("1. Tomar una carta del mazo.")
         print("2. Dejar una carta")
         print("3. Ver mis cartas.")
-        #TODO: IMPLEMENTAR LA OPCION DE CANTAR UNO - ASHANTY
+        # TODO: IMPLEMENTAR LA OPCION DE CANTAR UNO - ASHANTY
         print("4. Cantar UNO")
 
         player_round = True
@@ -109,12 +108,11 @@ class Juego:
                         print("El mazo está vacío, se está barajando la pila...")
                         self.pila.barajar()
                         self.mazo.cartas.extend(self.pila.cartas[1:])
-                        self.pila.cartas[1:] =[]
+                        self.pila.cartas[1:] = []
                         time.sleep(2)
                         print("Pila barajada y agregada al mazo.")
                         self.movimiento_de_jugador(jugador)
 
-                                
                     player_thinking = True
                     while player_thinking:
                         print("1. Dejar carta")
@@ -169,7 +167,8 @@ class Juego:
 
                 for jugador_iter in jugadores:
                     if len(jugador_iter.cartas) == 1 and jugador_iter != jugador_iter:
-                        opcion = input(f"{jugador_iter.nombre} ha atrapado a {jugador_iter.nombre} sin gritar 'UNO'. ¿Quieres gritar '¡UNO!'? (s/n): ")
+                        opcion = input(
+                            f"{jugador_iter.nombre} ha atrapado a {jugador_iter.nombre} sin gritar 'UNO'. ¿Quieres gritar '¡UNO!'? (s/n): ")
                         if opcion.lower() == "s":
                             print(f"{jugador_iter.nombre} grita '¡UNO!'")
                             print(f"{jugador_iter.nombre} debe robar dos cartas adicionales.")
@@ -208,10 +207,10 @@ class Juego:
 
             carta_ultima_jugada = self.pila.cartas[-1]
 
-            if isinstance(carta_ultima_jugada, CartaAccion) and carta_ultima_jugada.accion == "Reversa":
-                if len(jugadores) == 2:
-                    print(f"El jugador {current_player + 1} juega otra vez debido a la carta Reversa")
-                else:
-                    current_player = (current_player - 1) % len(jugadores)
-            else:
+            if isinstance(carta_ultima_jugada, CartaAccion) and carta_ultima_jugada.accion == "Reversa" and len(
+                    jugadores) == 2:
                 current_player = (current_player + 1) % len(jugadores)
+            elif isinstance(carta_ultima_jugada, CartaAccion) and carta_ultima_jugada.accion == "Reversa":
+                jugadores = jugadores[::-1]
+
+            current_player = (current_player + 1) % len(jugadores)
