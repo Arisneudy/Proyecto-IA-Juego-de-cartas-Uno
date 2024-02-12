@@ -14,8 +14,11 @@ class Juego:
 
     def obtener_primera_carta(self):
         self.mazo.barajar()
-        primera_carta = self.mazo.cartas.pop(0)
-        self.pila.cartas.append(primera_carta)
+        while True:
+            primera_carta = self.mazo.cartas.pop(0)
+            if not isinstance(primera_carta, (CartaAccion, Comodin)):
+                self.pila.cartas.append(primera_carta)
+                break
 
     def obtener_jugadores(self):
         while True:
@@ -235,6 +238,8 @@ class Juego:
                     jugadores = jugadores[::-1]
                 if carta_ultima_jugada.accion == "Ø":
                     current_player += 1
+                    print(
+                        f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} pierde su turno.")
                 if carta_ultima_jugada.accion == "+2":
                     for _ in range(2):
                         carta = self.mazo.cartas.pop(1)
@@ -264,6 +269,34 @@ class Juego:
                     print(
                         f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} pierde su turno.")
 
+                    print("Seleccione el color para cambiar la pila:")
+                    print("1. Rojo")
+                    print("2. Azul")
+                    print("3. Verde")
+                    print("4. Amarillo")
+
+                    while True:
+                        color_option = input("Elija una opción: ")
+                        if color_option.isdigit():
+                            color_option = int(color_option)
+                            if 1 <= color_option <= 4:
+                                if color_option == 1:
+                                    self.color_pila = "Rojo"
+                                elif color_option == 2:
+                                    self.color_pila = "Azul"
+                                elif color_option == 3:
+                                    self.color_pila = "Verde"
+                                elif color_option == 4:
+                                    self.color_pila = "Amarillo"
+
+                                print(f"La pila ha cambiado de color a {self.color_pila}.")
+                                break
+                            else:
+                                print("Ingrese una opción válida (1, 2, 3 o 4)")
+                        else:
+                            print("Ingrese una opción válida (1, 2, 3 o 4)")
+
+                elif carta_ultima_jugada.valor == "Comodin":
                     print("Seleccione el color para cambiar la pila:")
                     print("1. Rojo")
                     print("2. Azul")
