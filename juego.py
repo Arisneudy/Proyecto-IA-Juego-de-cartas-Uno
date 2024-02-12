@@ -84,11 +84,9 @@ class Juego:
         print("La carta encima de la pila es:", ultima_carta_de_la_pila)
         print("==========")
         print(f"{jugador.nombre}, elige una acción:")
-        # TODO: IMPLEMENTAR LA TOMA DE CARTA DEL MAZO - DONY
         print("1. Tomar una carta del mazo.")
         print("2. Dejar una carta")
         print("3. Ver mis cartas.")
-        # TODO: IMPLEMENTAR LA OPCION DE CANTAR UNO - ASHANTY
         print("4. Cantar UNO")
 
         player_round = True
