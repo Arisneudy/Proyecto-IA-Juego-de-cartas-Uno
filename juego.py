@@ -152,7 +152,6 @@ class Juego:
                         elif movimiento_de_jugador == "2":
                             self.mostrar_cartas(jugador)
                             while True:
-                                self.mostrar_cartas(jugador)
                                 opcion_descartar = input(
                                     "Seleccione el número de la carta que desea descartar o ingrese '0' para volver "
                                     "atrás: ")
