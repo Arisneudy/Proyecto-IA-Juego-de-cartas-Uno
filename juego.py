@@ -214,11 +214,36 @@ class Juego:
                     current_player += 1
                 if carta_ultima_jugada.accion == "+2":
                     for _ in range(2):
-                        self.mazo.imprimir_cuenta_del_mazo()
                         carta = self.mazo.cartas.pop(1)
-                        self.mazo.imprimir_cuenta_del_mazo()
                         jugadores[current_player + 1].cartas.append(carta)
-                        print(f"Al jugador {current_player + 2} se le añaden dos cartas.")
+                    print(f"Al jugador {current_player + 1} se le añaden dos cartas.")
+                    print(f"El jugador {current_player + 1} pierde su turno.")
+
+            if isinstance(carta_ultima_jugada, Comodin):
+                if carta_ultima_jugada.valor == "+4":
+                    for _ in range(4):
+                        carta = self.mazo.cartas.pop(1)
+                        jugadores[current_player + 1].cartas.append(carta)
+
+                    current_player += 1
+
+                    # while True:
+                    #     color_option = input("¿Hacia cual color cambia la pila?")
+                    #     print("1. Rojo")
+                    #     print("2. Azul")
+                    #     print("3. Verde")
+                    #     print("4. Amarillo")
+                    #
+                    #     if color_option.isdigit():
+                    #         color_option = int(color_option)
+                    #         if color_option == 1:
+                    #             Carta()
+                    #         continue
+                    #     else:
+                    #         print("Ingrese una opcion valida (1, 2, 3 o 4)")
+                    #         continue
+
+                    print(f"Al jugador {current_player + 1} se le añaden cuatro cartas.")
+                    print(f"El jugador {current_player + 1} pierde su turno.")
 
             current_player = (current_player + 1) % len(jugadores)
-
