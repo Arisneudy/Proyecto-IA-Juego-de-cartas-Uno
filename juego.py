@@ -98,13 +98,20 @@ class Juego:
     def movimiento_de_jugador(self, jugador, jugadores):
         ultima_carta_de_la_pila = self.pila.cartas[-1]
 
-        print("La carta encima de la pila es:", ultima_carta_de_la_pila)
-        print("==========")
-        print(f"{jugador.nombre}, elige una acción:")
-        print("1. Tomar una carta del mazo.")
-        print("2. Dejar una carta")
-        print("3. Ver mis cartas.")
-        print("4. Cantar UNO")
+        print("| ------------------------------------------ |")
+        print()
+        print(" ~ La carta encima de la pila es:", ultima_carta_de_la_pila, " ~")
+        print()
+        print("| ------------------------------------------ |")
+        print(f"| {jugador.nombre}, elige una acción:               |")
+        print("| ------------------------------------------ |")
+        print("| 1. Tomar una carta del mazo                |")
+        print("| 2. Dejar una carta                         |")
+        print("| 3. Ver mis cartas                          |")
+        print("| 4. Cantar UNO                              |")
+        print("| 0. Salir del juego                         |")
+        print("| __________________________________________ |")
+        print()
 
         player_round = True
         while player_round:
@@ -114,11 +121,27 @@ class Juego:
                     carta = self.mazo.cartas.pop(0)
                     if len(self.mazo.cartas) != 0:
                         jugador.cartas.append(carta)
-                        print(f"{jugador.nombre} tomó una carta del mazo.")
-                        print("==========")
-                        print(f"{carta} Es la carta Tomada del mazo")
-                        print("==========")
-                        print(f"{jugador.nombre}. ¿Que desea hacer?")
+                        limpiar.clear_console()
+                        print()
+                        print(" ~ La carta encima de la pila es:", ultima_carta_de_la_pila, " ~")
+                        print()
+                        print("| ------------------------------------------ |")
+                        print(f"| {jugador.nombre} tomó una carta del mazo          |")
+                        print("| ------------------------------------------ |")
+                        print()
+                        print(" La carta tomada del mazo es:", carta)
+                        print()
+                        print("| ------------------------------------------ |")
+                        print(f"| {jugador.nombre}, elige una acción:               |")
+                        print("| ------------------------------------------ |")
+                        print("| 1. Tomar una carta del mazo                |")
+                        print("| 2. Dejar una carta                         |")
+                        print("| 3. Ver mis cartas                          |")
+                        print("| 4. Cantar UNO                              |")
+                        print("| 0. Salir del juego                         |")
+                        print("| __________________________________________ |")
+                        print()
+        
                     else:
                         print("El mazo está vacío, se está barajando la pila...")
                         self.pila.barajar()
@@ -130,18 +153,13 @@ class Juego:
 
                     player_thinking = True
                     while player_thinking:
-                        print("1. Tomar otra carta")
-                        print("2. Dejar carta")
-                        print("3. Ver la pila.")
-                        print("4. Ver mis cartas.")
-                        movimiento_de_jugador = input("Seleccione una opción: ")
 
+                        movimiento_de_jugador = input("Seleccione una opción: ")
                         if movimiento_de_jugador == "1":
                             if self.mazo.cartas:
                                 carta = self.mazo.cartas.pop(0)
                                 jugador.cartas.append(carta)
-                                print(f"{jugador.nombre} tomó otra carta del mazo.")
-                                print(f"{carta} es la carta tomada del mazo.")
+
                             else:
                                 print("El mazo está vacío.")
                         elif movimiento_de_jugador == "2":
@@ -151,21 +169,43 @@ class Juego:
                                     "Seleccione el número de la carta que desea descartar o ingrese '0' para volver "
                                     "atrás: ")
                                 if opcion_descartar == '0':
-                                    break
+                                    limpiar.clear_console()
+                                    print("Perdiste tu turno")
+                                    print()
+                                    input("Presiona enter para continuar....")
+                                    return
+                                    
                                 if self.validar_y_descartar_carta(jugador, opcion_descartar):
                                     player_round = False
                                     player_thinking = False
+                                    limpiar.clear_console()
                                     break
                         elif movimiento_de_jugador == "3":
                             if self.pila.cartas:
                                 print(self.pila.cartas[-1])
-                                print("==========")
+                                input("Presiona enter para continuar....")
+                                limpiar.clear_console()
+
+                                print("| ------------------------------------------ |")
+                                print()
+                                print(" ~ La carta encima de la pila es:", ultima_carta_de_la_pila, " ~")
+                                print()
+                                print("| ------------------------------------------ |")
+                                print(f"| {jugador.nombre}, elige una acción:               |")
+                                print("| ------------------------------------------ |")
+                                print("| 1. Tomar una carta del mazo                |")
+                                print("| 2. Dejar una carta                         |")
+                                print("| 3. Ver mis cartas                          |")
+                                print("| 4. Cantar UNO                              |")
+                                print("| 0. Salir del juego                         |")
+                                print("| __________________________________________ |")
+                                print()
+                                
                             else:
                                 print("La pila está vacía.")
                         elif movimiento_de_jugador == "4":
                             if self.pila.cartas:
                                 print(self.pila.cartas[-1])
-                                print("==========")
                             else:
                                 print("La pila está vacía.")
                             self.mostrar_cartas(jugador)
@@ -178,13 +218,34 @@ class Juego:
                     opcion_descartar = input(
                         "Seleccione el número de la carta que desea descartar o ingrese '0' para volver atrás: ")
                     if opcion_descartar == '0':
-                        break
+                        limpiar.clear_console()
+                        print("Perdiste tu turno")
+                        print
+                        input("Presiona enter para continuar....")
+                        return
                     if self.validar_y_descartar_carta(jugador, opcion_descartar):
                         player_round = False
                         break
 
             elif opcion == "3":
                 self.mostrar_cartas(jugador)
+                input("Presiona enter para continuar....")
+                limpiar.clear_console()
+
+                print("| ------------------------------------------ |")
+                print()
+                print(" ~ La carta encima de la pila es:", ultima_carta_de_la_pila, " ~")
+                print()
+                print("| ------------------------------------------ |")
+                print(f"| {jugador.nombre}, elige una acción:               |")
+                print("| ------------------------------------------ |")
+                print("| 1. Tomar una carta del mazo                |")
+                print("| 2. Dejar una carta                         |")
+                print("| 3. Ver mis cartas                          |")
+                print("| 4. Cantar UNO                              |")
+                print("| 0. Salir del juego                         |")
+                print("| __________________________________________ |")
+                print()
 
             elif opcion == "4":
                 if len(jugador.cartas) == 1:
@@ -201,14 +262,20 @@ class Juego:
                             print(f"{jugador_iter.nombre} debe robar dos cartas adicionales.")
                             self.repartir_cartas([jugador_iter, jugador_iter])
 
+            elif opcion == "0":
+                limpiar.clear_console()
+                print("¡Fin del juego!")
+                exit()
             else:
                 print("Opción inválida. Por favor, selecciona 1, 2, 3 o 4.")
 
     def mostrar_cartas(self, jugador):
+        limpiar.clear_console()
         print(f"Cartas de {jugador.nombre}:")
+        print()
         for i, carta in enumerate(jugador.cartas, 1):
             print(f"{i}. {carta}")
-        print("=================")
+        print()
 
     def descartar_carta(self, jugador):
         while True:
@@ -229,8 +296,9 @@ class Juego:
         current_player = 0
 
         while True:
-            print(f"Turno del jugador {current_player + 1}:")
             limpiar.clear_console()
+            print("| ------------------------------------------ |")
+            print(f"| Turno del jugador {current_player + 1}:                       |")
             self.movimiento_de_jugador(jugadores[current_player], jugadores)
 
             ultima_carta_jugada = self.pila.cartas[-1]
