@@ -14,32 +14,27 @@ class Juego:
 
     def obtener_primera_carta(self):
         self.mazo.barajar()
-        while True:
-            primera_carta = self.mazo.cartas.pop(0)
-            if not isinstance(primera_carta, (CartaAccion, Comodin)):
-                self.pila.cartas.append(primera_carta)
+        for carta in self.mazo.cartas:
+            if not isinstance(carta, (CartaAccion, Comodin)):
+                self.pila.cartas.append(carta)
                 break
 
     def obtener_jugadores(self):
         while True:
-
             number_of_players = input("¿Cuantas personas juegan? (2-4): ")
             if number_of_players.isdigit():
                 number_of_players = int(number_of_players)
                 if 2 <= number_of_players <= 4:
-                    jugadores = [Jugador(f"Jugador {i + 1}") for i in range(number_of_players)]
-                    return jugadores
+                    return [Jugador(f"Jugador {i + 1}") for i in range(number_of_players)]
             print("Por favor, ingresa un número válido entre 2 y 4.")
 
     def repartir_cartas(self, jugadores):
         cartas_por_jugador = 7
-        cartas_repartidas = 0
 
-        while cartas_repartidas < cartas_por_jugador * len(jugadores):
-            carta = self.mazo.cartas.pop(0)
-            jugador_actual = jugadores[cartas_repartidas % len(jugadores)]
-            jugador_actual.cartas.append(carta)
-            cartas_repartidas += 1
+        for _ in range(cartas_por_jugador):
+            for jugador in jugadores:
+                carta = self.mazo.cartas.pop(0)
+                jugador.cartas.append(carta)
 
     def es_carta_valida_para_descartar(self, carta_descartar):
         carta_en_pila = self.pila.cartas[-1]
