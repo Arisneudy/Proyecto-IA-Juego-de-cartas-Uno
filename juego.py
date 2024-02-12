@@ -39,19 +39,11 @@ class Juego:
     def es_carta_valida_para_descartar(self, carta_descartar):
         carta_en_pila = self.pila.cartas[-1]
 
-        if isinstance(carta_descartar, Comodin):
+        if isinstance(carta_descartar, Comodin) or isinstance(carta_en_pila, Comodin):
             return True
 
-        if isinstance(carta_en_pila, Comodin):
-            return True
-
-        if isinstance(carta_descartar, CartaAccion):
-            if isinstance(carta_descartar, CartaAccion) and isinstance(carta_en_pila, CartaAccion):
-                return carta_descartar.color == carta_en_pila.color or carta_descartar.accion == carta_en_pila.accion
-            elif isinstance(carta_en_pila, Comodin):
-                return True
-            else:
-                return carta_descartar.color == carta_en_pila.color
+        if isinstance(carta_descartar, CartaAccion) and isinstance(carta_en_pila, CartaAccion):
+            return carta_descartar.color == carta_en_pila.color or carta_descartar.accion == carta_en_pila.accion
 
         if isinstance(carta_descartar, Carta) and not (
                 isinstance(carta_en_pila, CartaAccion) or isinstance(carta_en_pila, Comodin)):
@@ -206,8 +198,10 @@ class Juego:
 
     def mostrar_cartas(self, jugador):
         print(f"Cartas de {jugador.nombre}:")
-        for i, carta in enumerate(jugador.cartas, 1):
-            print(f"{i}. {carta}")
+
+        for i in range(len(jugador.cartas)):
+            carta = jugador.cartas[i]
+            print(f"{i + 1}. {carta}")
         print("=================")
 
     def descartar_carta(self, jugador):
