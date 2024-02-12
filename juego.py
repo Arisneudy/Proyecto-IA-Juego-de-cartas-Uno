@@ -215,17 +215,27 @@ class Juego:
                 if carta_ultima_jugada.accion == "+2":
                     for _ in range(2):
                         carta = self.mazo.cartas.pop(1)
-                        jugadores[current_player + 1].cartas.append(carta)
-                    print(f"Al jugador {current_player + 1} se le añaden dos cartas.")
-                    print(f"El jugador {current_player + 1} pierde su turno.")
+                        if current_player + 1 >= len(jugadores):
+                            jugadores[current_player].cartas.append(carta)
+                        else:
+                            jugadores[current_player + 1].cartas.append(carta)
+
+                    current_player += 1
+                    print(f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} se le añaden dos cartas.")
+                    print(f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} pierde su turno.")
 
             if isinstance(carta_ultima_jugada, Comodin):
                 if carta_ultima_jugada.valor == "+4":
                     for _ in range(4):
                         carta = self.mazo.cartas.pop(1)
-                        jugadores[current_player + 1].cartas.append(carta)
+                        if current_player + 1 >= len(jugadores):
+                            jugadores[0].cartas.append(carta)
+                        else:
+                            jugadores[current_player + 1].cartas.append(carta)
 
                     current_player += 1
+                    print(f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} se le añaden dos cartas.")
+                    print(f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} pierde su turno.")
 
                     # while True:
                     #     color_option = input("¿Hacia cual color cambia la pila?")
@@ -242,8 +252,5 @@ class Juego:
                     #     else:
                     #         print("Ingrese una opcion valida (1, 2, 3 o 4)")
                     #         continue
-
-                    print(f"Al jugador {current_player + 1} se le añaden cuatro cartas.")
-                    print(f"El jugador {current_player + 1} pierde su turno.")
 
             current_player = (current_player + 1) % len(jugadores)
