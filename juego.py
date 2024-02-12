@@ -34,28 +34,41 @@ class Juego:
             jugador_actual = jugadores[cartas_repartidas % len(jugadores)]
             jugador_actual.cartas.append(carta)
             cartas_repartidas += 1
-
+            
     def es_carta_valida_para_descartar(self, carta_descartar):
         carta_en_pila = self.pila.cartas[-1]
 
+
         if isinstance(carta_descartar, Comodin):
+            return True
+        
+        if isinstance(carta_en_pila, Comodin):
             return True
 
         if isinstance(carta_descartar, CartaAccion):
-            return carta_descartar.color == carta_en_pila.color or carta_descartar.accion == carta_en_pila.accion
-
+            if isinstance(carta_descartar, CartaAccion) and isinstance(carta_en_pila, CartaAccion):
+                return carta_descartar.color == carta_en_pila.color or carta_descartar.accion == carta_en_pila.accion
+            elif isinstance(carta_en_pila, Comodin):
+                return True
+            else:
+                return carta_descartar.color == carta_en_pila.color
+        
         if isinstance(carta_descartar, Carta) and not (
                 isinstance(carta_en_pila, CartaAccion) or isinstance(carta_en_pila, Comodin)):
             return carta_descartar.color == carta_en_pila.color or carta_descartar.valor == carta_en_pila.valor
 
+        if isinstance(carta_descartar, Carta) and isinstance(carta_en_pila, CartaAccion):
+            return carta_descartar.color == carta_en_pila.color
+
         return False
+
 
     # TODO: COMPLETAR VALIDACIONES - ARISNEUDY
     def validar_y_descartar_carta(self, jugador, opcion_descartar):
         if opcion_descartar.isdigit():
             opcion_descartar = int(opcion_descartar) - 1
             if 0 <= opcion_descartar < len(jugador.cartas):
-                carta_descartar = jugador.cartas[opcion_descartar]
+                carta_descartar = jugador.cartas[opcion_descartar] 
 
                 if self.es_carta_valida_para_descartar(carta_descartar):
                     jugador.cartas.remove(carta_descartar)
@@ -67,7 +80,9 @@ class Juego:
         return False
 
     def movimiento_de_jugador(self, jugador, jugadores):
-        print("La carta encima de la pila es:", self.pila.cartas[-1])
+        ultima_carta_de_la_pila = self.pila.cartas[-1]
+        
+        print("La carta encima de la pila es:", ultima_carta_de_la_pila)
         print("==========")
         print(f"{jugador.nombre}, elige una acción:")
         #TODO: IMPLEMENTAR LA TOMA DE CARTA DEL MAZO - DONY
@@ -86,6 +101,9 @@ class Juego:
                     if len(self.mazo.cartas) != 0:
                         jugador.cartas.append(carta)
                         print(f"{jugador.nombre} tomó una carta del mazo.")
+                        print("==========")
+                        print(f"{carta} Es la carta Tomada del mazo")
+                        print("==========")
                         print(f"{jugador.nombre}. ¿Que desea hacer?")
                     else:
                         print("El mazo está vacío, se está barajando la pila...")
@@ -189,7 +207,14 @@ class Juego:
             print(f"Turno del jugador {current_player + 1}:")
             self.movimiento_de_jugador(jugadores[current_player], jugadores)
 
-            current_player += 1
+            carta_ultima_jugada = self.pila.cartas[-1]
 
-            if current_player == len(jugadores):
-                current_player = 0
+            if isinstance(carta_ultima_jugada, CartaAccion):
+                if carta_ultima_jugada.accion == "Reverse":
+                    jugadores = jugadores[::-1]
+                    if len(jugadores) == 2:
+                        current_player = current_player - 1
+                # if carta_ultima_jugada.accion == "Ø":
+                #     continue
+
+            current_player = (current_player + 1) % len(jugadores)
