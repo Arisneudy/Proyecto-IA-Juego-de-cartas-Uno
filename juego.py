@@ -209,6 +209,9 @@ class Juego:
             carta_ultima_jugada = self.pila.cartas[-1]
 
             if isinstance(carta_ultima_jugada, CartaAccion) and carta_ultima_jugada.accion == "Reversa":
-                print(f"El jugador {current_player + 1} juega otra vez debido a la carta Reversa")
+                if len(jugadores) == 2:
+                    print(f"El jugador {current_player + 1} juega otra vez debido a la carta Reversa")
+                else:
+                    current_player = (current_player - 1) % len(jugadores)
             else:
                 current_player = (current_player + 1) % len(jugadores)
