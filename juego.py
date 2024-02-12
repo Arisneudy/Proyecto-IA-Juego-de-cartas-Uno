@@ -212,7 +212,7 @@ class Juego:
                     if opcion_descartar == '0':
                         limpiar.clear_console()
                         print("Perdiste tu turno")
-                        print
+                        print()
                         input("Presiona enter para continuar....")
                         return
                     if self.validar_y_descartar_carta(jugador, opcion_descartar):
