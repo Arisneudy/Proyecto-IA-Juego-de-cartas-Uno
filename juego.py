@@ -272,7 +272,7 @@ class Juego:
 
                     current_player += 1
                     print(
-                        f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} se le añaden dos cartas.")
+                        f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} se le añaden cuatro cartas.")
                     print(
                         f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} pierde su turno.")
 
