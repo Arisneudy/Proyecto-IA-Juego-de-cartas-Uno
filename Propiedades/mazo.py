@@ -1,7 +1,7 @@
 import random
-from carta import Carta
-from carta import CartaAccion
-from carta import Comodin
+from Propiedades.carta import Carta
+from Propiedades.carta import CartaAccion
+from Propiedades.carta import Comodin
 
 
 class Mazo:
