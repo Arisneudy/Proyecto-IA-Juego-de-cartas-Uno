@@ -247,6 +247,10 @@ class Juego:
                     current_player = (current_player + 1) % len(jugadores)
                 if carta_ultima_jugada.accion == "Reversa":
                     jugadores = jugadores[::-1]
+                    if current_player == 0:
+                        current_player = len(jugadores) - 1
+                    else:
+                        current_player -= 1
                 if carta_ultima_jugada.accion == "Ø":
                     current_player += 1
                     print(
