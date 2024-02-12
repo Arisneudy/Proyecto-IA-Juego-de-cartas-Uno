@@ -200,21 +200,15 @@ class Juego:
         jugadores = self.obtener_jugadores()
         self.repartir_cartas(jugadores)
 
-        is_active_game = True
         current_player = 0
 
-        while is_active_game:
+        while True:
             print(f"Turno del jugador {current_player + 1}:")
             self.movimiento_de_jugador(jugadores[current_player], jugadores)
 
             carta_ultima_jugada = self.pila.cartas[-1]
 
-            if isinstance(carta_ultima_jugada, CartaAccion):
-                if carta_ultima_jugada.accion == "Reverse":
-                    jugadores = jugadores[::-1]
-                    if len(jugadores) == 2:
-                        current_player = current_player - 1
-                # if carta_ultima_jugada.accion == "Ø":
-                #     continue
-
-            current_player = (current_player + 1) % len(jugadores)
+            if isinstance(carta_ultima_jugada, CartaAccion) and carta_ultima_jugada.accion == "Reversa":
+                print(f"El jugador {current_player + 1} juega otra vez debido a la carta Reversa")
+            else:
+                current_player = (current_player + 1) % len(jugadores)
