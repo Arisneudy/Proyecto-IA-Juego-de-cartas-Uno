@@ -208,10 +208,17 @@ class Juego:
             if isinstance(carta_ultima_jugada, CartaAccion):
                 if carta_ultima_jugada.accion == "Reversa" and len(jugadores) == 2:
                     current_player = (current_player + 1) % len(jugadores)
-                elif carta_ultima_jugada.accion == "Reversa":
+                if carta_ultima_jugada.accion == "Reversa":
                     jugadores = jugadores[::-1]
-                elif carta_ultima_jugada.accion == "Ø":
+                if carta_ultima_jugada.accion == "Ø":
                     current_player += 1
+                if carta_ultima_jugada.accion == "+2":
+                    for _ in range(2):
+                        self.mazo.imprimir_cuenta_del_mazo()
+                        carta = self.mazo.cartas.pop(1)
+                        self.mazo.imprimir_cuenta_del_mazo()
+                        jugadores[current_player + 1].cartas.append(carta)
+                        print(f"Al jugador {current_player + 2} se le añaden dos cartas.")
 
             current_player = (current_player + 1) % len(jugadores)
 
