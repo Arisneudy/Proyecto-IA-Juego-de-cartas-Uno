@@ -131,53 +131,62 @@ class Juego:
                         self.pila.cartas[1:] = []
                         time.sleep(2)
                         print("Pila barajada y agregada al mazo.")
-                        self.movimiento_de_jugador(jugador)
+                        self.movimiento_de_jugador(jugador, jugadores)
 
                     player_thinking = True
                     while player_thinking:
                         print("1. Dejar carta")
                         print("2. Ver la pila.")
                         print("3. Ver mis cartas.")
-                        movimiento_de_jugador = input("Seleccione una opcion: ")
+                        print("4. Tomar otra carta")
+                        movimiento_de_jugador = input("Seleccione una opción: ")
 
                         if movimiento_de_jugador == "1":
                             self.mostrar_cartas(jugador)
-
-                            seleccionando_carta = True
-                            while seleccionando_carta:
-                                # TODO: FIX THIS
-                                opcion_descartar = input("Seleccione el número de la carta que desea descartar: ")
+                            while True:
+                                self.mostrar_cartas(jugador)
+                                opcion_descartar = input(
+                                    "Seleccione el número de la carta que desea descartar o ingrese '0' para volver atrás: ")
+                                if opcion_descartar == '0':
+                                    break
                                 if self.validar_y_descartar_carta(jugador, opcion_descartar):
                                     player_round = False
                                     player_thinking = False
                                     break
-                        if movimiento_de_jugador == "2":
+                        elif movimiento_de_jugador == "2":
                             if self.pila.cartas:
                                 print(self.pila.cartas[-1])
                                 print("==========")
                             else:
                                 print("La pila está vacía.")
-                            continue
-                        if movimiento_de_jugador == "3":
+                        elif movimiento_de_jugador == "3":
                             if self.pila.cartas:
                                 print(self.pila.cartas[-1])
                                 print("==========")
                             else:
                                 print("La pila está vacía.")
                             self.mostrar_cartas(jugador)
-                            continue
-                else:
-                    print("El mazo está vacío.")
-
+                        elif movimiento_de_jugador == "4":
+                            if self.mazo.cartas:
+                                carta = self.mazo.cartas.pop(0)
+                                jugador.cartas.append(carta)
+                                print(f"{jugador.nombre} tomó otra carta del mazo.")
+                                print(f"{carta} es la carta tomada del mazo.")
+                            else:
+                                print("El mazo está vacío.")
+                        else:
+                            print("Opción inválida. Por favor, selecciona 1, 2, 3 o 4.")
             elif opcion == "2":
-                self.mostrar_cartas(jugador)
-                seleccionando_carta = True
-                while seleccionando_carta:
-                    #TODO: FIX THIS
-                    opcion_descartar = input("Seleccione el número de la carta que desea descartar: ")
+                while True:
+                    self.mostrar_cartas(jugador)
+                    opcion_descartar = input(
+                        "Seleccione el número de la carta que desea descartar o ingrese '0' para volver atrás: ")
+                    if opcion_descartar == '0':
+                        break
                     if self.validar_y_descartar_carta(jugador, opcion_descartar):
                         player_round = False
                         break
+
             elif opcion == "3":
                 self.mostrar_cartas(jugador)
 
