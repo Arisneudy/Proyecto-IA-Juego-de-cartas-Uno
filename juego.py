@@ -205,10 +205,13 @@ class Juego:
 
             carta_ultima_jugada = self.pila.cartas[-1]
 
-            if isinstance(carta_ultima_jugada, CartaAccion) and carta_ultima_jugada.accion == "Reversa" and len(
-                    jugadores) == 2:
-                current_player = (current_player + 1) % len(jugadores)
-            elif isinstance(carta_ultima_jugada, CartaAccion) and carta_ultima_jugada.accion == "Reversa":
-                jugadores = jugadores[::-1]
+            if isinstance(carta_ultima_jugada, CartaAccion):
+                if carta_ultima_jugada.accion == "Reversa" and len(jugadores) == 2:
+                    current_player = (current_player + 1) % len(jugadores)
+                elif carta_ultima_jugada.accion == "Reversa":
+                    jugadores = jugadores[::-1]
+                elif carta_ultima_jugada.accion == "Ø":
+                    current_player += 1
 
             current_player = (current_player + 1) % len(jugadores)
+
