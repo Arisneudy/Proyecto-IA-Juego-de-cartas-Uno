@@ -1,8 +1,8 @@
 import time
-from carta import Comodin, Carta, CartaAccion
-from mazo import Mazo
-from jugador import Jugador
-from pila import Pila
+from Propiedades.carta import Comodin, Carta, CartaAccion
+from Propiedades.mazo import Mazo
+from Propiedades.jugador import Jugador
+from Propiedades.pila import Pila
 from Herramientas import limpiar
 
 
