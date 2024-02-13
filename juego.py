@@ -203,28 +203,24 @@ class Juego:
                                     limpiar.clear_console()
                                     break
                         elif movimiento_de_jugador == "3":
-                            if self.pila.cartas:
-                                print(self.pila.cartas[-1])
-                                input("Presiona enter para continuar....")
-                                limpiar.clear_console()
+                            self.mostrar_cartas(jugador)
+                            input("Presiona enter para continuar....")
+                            limpiar.clear_console()
 
-                                print("| ------------------------------------------ |")
-                                print()
-                                print(" ~ La carta encima de la pila es:", ultima_carta_de_la_pila, " ~")
-                                print()
-                                print("| ------------------------------------------ |")
-                                print(f"| {jugador.nombre}, elige una acción:               |")
-                                print("| ------------------------------------------ |")
-                                print("| 1. Tomar una carta del mazo                |")
-                                print("| 2. Dejar una carta                         |")
-                                print("| 3. Ver mis cartas                          |")
-                                print("| 4. Cantar UNO                              |")
-                                print("| 0. Salir del juego                         |")
-                                print("| __________________________________________ |")
-                                print()
-
-                            else:
-                                print("La pila está vacía.")
+                            print("| ------------------------------------------ |")
+                            print()
+                            print(" ~ La carta encima de la pila es:", ultima_carta_de_la_pila, " ~")
+                            print()
+                            print("| ------------------------------------------ |")
+                            print(f"| {jugador.nombre}, elige una acción:               |")
+                            print("| ------------------------------------------ |")
+                            print("| 1. Tomar una carta del mazo                |")
+                            print("| 2. Dejar una carta                         |")
+                            print("| 3. Ver mis cartas                          |")
+                            print("| 4. Cantar UNO                              |")
+                            print("| 0. Salir del juego                         |")
+                            print("| __________________________________________ |")
+                            print()
                         elif movimiento_de_jugador == "4":
                             if self.pila.cartas:
                                 print(self.pila.cartas[-1])
