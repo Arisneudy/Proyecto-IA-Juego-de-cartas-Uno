@@ -330,7 +330,7 @@ class Juego:
         while True:
             limpiar.clear_console()
             print("| ------------------------------------------ |")
-            print(f"| Turno del jugador {current_player + 1}:                       |")
+            print(f"| Turno del jugador {current_player}:                       |")
             self.movimiento_de_jugador(jugadores[current_player], jugadores)
 
             ultima_carta_jugada = self.pila.cartas[-1]
