@@ -377,6 +377,8 @@ class Juego:
                             jugadores[current_player + 1].cartas.append(carta)
 
                     current_player += 1
+
+                    limpiar.clear_console()
                     print(
                         f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} se le añaden cuatro cartas.")
                     print(
@@ -410,6 +412,7 @@ class Juego:
                             print("Ingrese una opción válida (1, 2, 3 o 4)")
 
                 elif ultima_carta_jugada.valor == "Comodin":
+                    limpiar.clear_console()
                     print("Seleccione el color para cambiar la pila:")
                     print("1. Rojo")
                     print("2. Azul")
