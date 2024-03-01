@@ -42,14 +42,43 @@ class Juego:
                 carta = self.mazo.cartas.pop(0)
                 jugador.cartas.append(carta)
 
+    # def es_carta_valida_para_descartar(self, carta_descartar):
+    #     carta_en_pila = self.pila.cartas[-1]
+    #
+    #     if isinstance(carta_descartar, Comodin) or isinstance(carta_en_pila, Comodin):
+    #         return True
+    #
+    #     if isinstance(carta_descartar, CartaAccion) or isinstance(carta_en_pila, CartaAccion):
+    #         return carta_descartar.color == carta_en_pila.color or carta_descartar.accion == carta_en_pila.accion
+    #
+    #     if isinstance(carta_descartar, Carta) and not (
+    #             isinstance(carta_en_pila, CartaAccion) or isinstance(carta_en_pila, Comodin)):
+    #         return carta_descartar.color == carta_en_pila.color or carta_descartar.valor == carta_en_pila.valor
+    #
+    #     if isinstance(carta_descartar, Carta) and isinstance(carta_en_pila, CartaAccion):
+    #         return carta_descartar.color == carta_en_pila.color
+    #
+    #     return False
+
     def es_carta_valida_para_descartar(self, carta_descartar):
         carta_en_pila = self.pila.cartas[-1]
 
-        if isinstance(carta_descartar, Comodin) or isinstance(carta_en_pila, Comodin):
+        if isinstance(carta_descartar, Comodin):
             return True
 
+        if isinstance(carta_en_pila, Comodin):
+            if isinstance(carta_descartar, Carta) or isinstance(carta_descartar, CartaAccion):
+                if carta_descartar.color == self.color_pila:
+                    return True
+            return False
+
         if isinstance(carta_descartar, CartaAccion) or isinstance(carta_en_pila, CartaAccion):
-            return carta_descartar.color == carta_en_pila.color or carta_descartar.accion == carta_en_pila.accion
+            if isinstance(carta_descartar, CartaAccion) and isinstance(carta_en_pila, CartaAccion):
+                return carta_descartar.color == carta_en_pila.color or carta_descartar.accion == carta_en_pila.accion
+            elif isinstance(carta_descartar, CartaAccion):
+                return carta_descartar.color == carta_en_pila.color
+            elif isinstance(carta_en_pila, CartaAccion):
+                return carta_descartar.color == carta_en_pila.color
 
         if isinstance(carta_descartar, Carta) and not (
                 isinstance(carta_en_pila, CartaAccion) or isinstance(carta_en_pila, Comodin)):
@@ -326,13 +355,22 @@ class Juego:
             else:
                 print("Opción inválida. Por favor, elige un número entre 1 y 6.")
 
+    def obtener_posibles_movimientos(self, jugador):
+        posibles_movimientos = []
+
+        for carta in jugador.cartas:
+            if self.es_carta_valida_para_descartar(carta):
+                posibles_movimientos.append(("descartar", carta))
+
+        if self.mazo.cartas:
+            posibles_movimientos.append(("tomar_carta", None))
+
+        return posibles_movimientos
+
     def iniciar(self):
         self.obtener_primera_carta()
         jugadores = self.obtener_jugadores()
         self.repartir_cartas(jugadores)
-
-        for jugador in jugadores:
-            print(jugador.tipo)
 
         current_player = 0
 
@@ -340,8 +378,17 @@ class Juego:
             limpiar.clear_console()
             print("| ------------------------------------------ |")
             print(f"| Turno del jugador {current_player + 1}:                       |")
-            self.movimiento_de_jugador(jugadores[current_player], jugadores)
+            current_player_obj = jugadores[current_player]
 
+            # for option, card in self.obtener_posibles_movimientos(current_player_obj):
+            #         if option == "descartar":
+            #             print(f"Descartar carta: {card}")
+            #         elif option == "tomar_carta":
+            #             print("Tomar una carta del mazo")
+
+            self.movimiento_de_jugador(current_player_obj, jugadores)
+
+            # Game variables
             ultima_carta_jugada = self.pila.cartas[-1]
 
             for jugador in jugadores:
@@ -361,7 +408,7 @@ class Juego:
                 if ultima_carta_jugada.accion == "Ø":
                     current_player += 1
                     print(
-                        f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} pierde su turno.")
+                        f"El jugador {1 if current_player >= len(jugadores) else current_player + 1} pierde su turno.")
                 if ultima_carta_jugada.accion == "+2":
                     for _ in range(2):
                         carta = self.mazo.cartas.pop(1)
@@ -374,7 +421,7 @@ class Juego:
                     print(
                         f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} se le añaden dos cartas.")
                     print(
-                        f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} pierde su turno.")
+                        f"El jugador {1 if current_player >= len(jugadores) else current_player + 1} pierde su turno.")
 
             if isinstance(ultima_carta_jugada, Comodin):
                 if ultima_carta_jugada.valor == "+4":
@@ -391,7 +438,7 @@ class Juego:
                     print(
                         f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} se le añaden cuatro cartas.")
                     print(
-                        f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} pierde su turno.")
+                        f"El jugador {1 if current_player >= len(jugadores) else current_player + 1} pierde su turno.")
 
                     print("Seleccione el color para cambiar la pila:")
                     print("1. Rojo")
