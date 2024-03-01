@@ -1,9 +1,12 @@
 import time
+import random
+
 from Propiedades.carta import Comodin, Carta, CartaAccion
 from Propiedades.mazo import Mazo
 from Propiedades.jugador import Jugador, TipoJugador
 from Propiedades.pila import Pila
 from Herramientas import limpiar
+
 
 class Juego:
     def __init__(self):
@@ -123,6 +126,13 @@ class Juego:
         return False
 
     def movimiento_de_jugador(self, jugador, jugadores):
+
+        # for option, card in self.obtener_posibles_movimientos(jugador):
+        #         if option == "descartar":
+        #             print(f"Descartar carta: {card}")
+        #         elif option == "tomar_carta":
+        #             print("Tomar una carta del mazo")
+
         ultima_carta_de_la_pila = self.pila.cartas[-1]
 
         print("| ------------------------------------------ |")
@@ -367,6 +377,10 @@ class Juego:
 
         return posibles_movimientos
 
+    def obtener_decision_aleatoria_IA(self, jugador):
+        posibles_movimientos = self.obtener_posibles_movimientos_IA(jugador)
+        return random.choice(posibles_movimientos)
+
     def iniciar(self):
         self.obtener_primera_carta()
         jugadores = self.obtener_jugadores()
@@ -378,17 +392,11 @@ class Juego:
             limpiar.clear_console()
             print("| ------------------------------------------ |")
             print(f"| Turno del jugador {current_player + 1}:                       |")
-            current_player_obj = jugadores[current_player]
 
-            # for option, card in self.obtener_posibles_movimientos(current_player_obj):
-            #         if option == "descartar":
-            #             print(f"Descartar carta: {card}")
-            #         elif option == "tomar_carta":
-            #             print("Tomar una carta del mazo")
+            current_player_obj = jugadores[current_player]
 
             self.movimiento_de_jugador(current_player_obj, jugadores)
 
-            # Game variables
             ultima_carta_jugada = self.pila.cartas[-1]
 
             for jugador in jugadores:
