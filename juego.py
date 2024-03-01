@@ -45,24 +45,6 @@ class Juego:
                 carta = self.mazo.cartas.pop(0)
                 jugador.cartas.append(carta)
 
-    # def es_carta_valida_para_descartar(self, carta_descartar):
-    #     carta_en_pila = self.pila.cartas[-1]
-    #
-    #     if isinstance(carta_descartar, Comodin) or isinstance(carta_en_pila, Comodin):
-    #         return True
-    #
-    #     if isinstance(carta_descartar, CartaAccion) or isinstance(carta_en_pila, CartaAccion):
-    #         return carta_descartar.color == carta_en_pila.color or carta_descartar.accion == carta_en_pila.accion
-    #
-    #     if isinstance(carta_descartar, Carta) and not (
-    #             isinstance(carta_en_pila, CartaAccion) or isinstance(carta_en_pila, Comodin)):
-    #         return carta_descartar.color == carta_en_pila.color or carta_descartar.valor == carta_en_pila.valor
-    #
-    #     if isinstance(carta_descartar, Carta) and isinstance(carta_en_pila, CartaAccion):
-    #         return carta_descartar.color == carta_en_pila.color
-    #
-    #     return False
-
     def es_carta_valida_para_descartar(self, carta_descartar):
         carta_en_pila = self.pila.cartas[-1]
 
@@ -126,12 +108,12 @@ class Juego:
         return False
 
     def movimiento_de_jugador(self, jugador, jugadores):
-
-        # for option, card in self.obtener_posibles_movimientos(jugador):
-        #         if option == "descartar":
-        #             print(f"Descartar carta: {card}")
-        #         elif option == "tomar_carta":
-        #             print("Tomar una carta del mazo")
+        #TODO: Remove before production
+        for option, card in self.obtener_posibles_movimientos(jugador):
+                if option == "descartar":
+                    print(f"Descartar carta: {card}")
+                elif option == "tomar_carta":
+                    print("Tomar una carta del mazo")
 
         ultima_carta_de_la_pila = self.pila.cartas[-1]
 
@@ -150,9 +132,22 @@ class Juego:
         print("| __________________________________________ |")
         print()
 
+
         player_round = True
         while player_round:
-            opcion = input("Selecciona una opción: ")
+            if (jugador.tipo == TipoJugador.IA):
+                posibles_movimientos_IA = self.obtener_posibles_movimientos(jugador)
+                movimiento_IA = random.choice(posibles_movimientos_IA)
+
+                if movimiento_IA[0] == "descartar":
+                    carta_a_descartar = movimiento_IA[1]
+                    self.validar_y_descartar_carta(jugador, jugador.cartas.index(carta_a_descartar) + 1)
+                    break
+
+                opcion = "1"
+            else:
+                opcion = input("Selecciona una opción: ")
+
             if opcion == "1":
                 if self.mazo.cartas:
                     carta = self.mazo.cartas.pop(0)
@@ -190,12 +185,25 @@ class Juego:
 
                     player_thinking = True
                     while player_thinking:
-                        movimiento_de_jugador = input("Seleccione una opción: ")
+                        if jugador.tipo == TipoJugador.IA:
+                            posibles_movimientos_IA = self.obtener_posibles_movimientos(jugador)
+                            movimiento_IA = random.choice(posibles_movimientos_IA)
+
+                            if movimiento_IA[0] == "descartar":
+                                carta_a_descartar = movimiento_IA[1]
+                                self.validar_y_descartar_carta(jugador, jugador.cartas.index(carta_a_descartar) + 1)
+                                break
+
+                            movimiento_de_jugador = "1"
+                        else:
+                            movimiento_de_jugador = input("Seleccione una opción: ")
+
                         if movimiento_de_jugador == "1":
                             if self.mazo.cartas:
                                 carta = self.mazo.cartas.pop(0)
                                 jugador.cartas.append(carta)
                                 limpiar.clear_console()
+
                                 print()
                                 print(" ~ La carta encima de la pila es:", ultima_carta_de_la_pila, " ~")
                                 print()
@@ -378,8 +386,7 @@ class Juego:
         return posibles_movimientos
 
     def obtener_decision_aleatoria_IA(self, jugador):
-        posibles_movimientos = self.obtener_posibles_movimientos_IA(jugador)
-        return random.choice(posibles_movimientos)
+        pass
 
     def iniciar(self):
         self.obtener_primera_carta()
