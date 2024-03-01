@@ -1,10 +1,9 @@
 import time
 from Propiedades.carta import Comodin, Carta, CartaAccion
 from Propiedades.mazo import Mazo
-from Propiedades.jugador import Jugador
+from Propiedades.jugador import Jugador, TipoJugador
 from Propiedades.pila import Pila
 from Herramientas import limpiar
-
 
 class Juego:
     def __init__(self):
@@ -21,12 +20,19 @@ class Juego:
 
     def obtener_jugadores(self):
         while True:
-            number_of_players = input("¿Cuantas personas juegan? (2-4): ")
-            if number_of_players.isdigit():
+            number_of_players = input("¿Cuantas personas juegan? (1-4): ")
+            number_of_IA = input("¿Cuantos robots juegan? (1-4): ")
+            if number_of_players.isdigit() and number_of_IA.isdigit():
                 number_of_players = int(number_of_players)
-                if 2 <= number_of_players <= 4:
-                    return [Jugador(f"Jugador {i + 1}") for i in range(number_of_players)]
-            print("Por favor, ingresa un número válido entre 2 y 4.")
+                number_of_IA = int(number_of_IA)
+                if 1 <= number_of_players <= 4 and 1 <= number_of_IA <= 4:
+                    players = []
+                    for i in range(number_of_players):
+                        players.append(Jugador(f"Jugador {i + 1}", TipoJugador.HUMANO))
+                    for i in range(number_of_IA):
+                        players.append(Jugador(f"IA {i + 1}", TipoJugador.IA))
+                    return players
+            print("Por favor, ingresa un número válido entre 1 y 4 para el número de jugadores y de IA.")
 
     def repartir_cartas(self, jugadores):
         cartas_por_jugador = 7
@@ -325,12 +331,15 @@ class Juego:
         jugadores = self.obtener_jugadores()
         self.repartir_cartas(jugadores)
 
+        for jugador in jugadores:
+            print(jugador.tipo)
+
         current_player = 0
 
         while True:
             limpiar.clear_console()
             print("| ------------------------------------------ |")
-            print(f"| Turno del jugador {current_player}:                       |")
+            print(f"| Turno del jugador {current_player + 1}:                       |")
             self.movimiento_de_jugador(jugadores[current_player], jugadores)
 
             ultima_carta_jugada = self.pila.cartas[-1]
