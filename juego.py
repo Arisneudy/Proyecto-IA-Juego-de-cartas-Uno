@@ -75,6 +75,8 @@ class Juego:
         return False
 
     def validar_y_descartar_carta(self, jugador, opcion_descartar):
+        opcion_descartar = str(opcion_descartar)
+
         if opcion_descartar.isdigit():
             opcion_descartar = int(opcion_descartar) - 1
             if 0 <= opcion_descartar < len(jugador.cartas):
@@ -142,7 +144,7 @@ class Juego:
                 if movimiento_IA[0] == "descartar":
                     carta_a_descartar = movimiento_IA[1]
                     self.validar_y_descartar_carta(jugador, jugador.cartas.index(carta_a_descartar) + 1)
-                    break
+                    return
 
                 opcion = "1"
             else:
