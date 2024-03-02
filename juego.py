@@ -175,7 +175,7 @@ class Juego:
                         print("| 0. Salir del juego                         |")
                         print("| __________________________________________ |")
                         print()
-
+                        break
                     else:
                         print("El mazo está vacío, se está barajando la pila...")
                         self.pila.barajar()
@@ -225,7 +225,7 @@ class Juego:
                                 print("| 0. Salir del juego                         |")
                                 print("| __________________________________________ |")
                                 print()
-                                break
+                                self.movimiento_de_jugador(jugador, jugadores)
                             else:
                                 print("El mazo está vacío.")
                         elif movimiento_de_jugador == "2":
