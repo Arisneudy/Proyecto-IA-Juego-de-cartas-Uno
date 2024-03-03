@@ -1,5 +1,6 @@
 import time
 import random
+import copy
 
 from Propiedades.carta import Comodin, Carta, CartaAccion
 from Propiedades.mazo import Mazo
@@ -13,6 +14,8 @@ class Juego:
         self.mazo = Mazo()
         self.pila = Pila()
         self.color_pila = None
+        self.current_player = 0
+        self.players = []
 
     def obtener_primera_carta(self):
         self.mazo.barajar()
@@ -38,6 +41,7 @@ class Juego:
                         players.append(Jugador(f"Jugador {i + 1}", TipoJugador.HUMANO))
                     for i in range(number_of_IA):
                         players.append(Jugador(f"IA {i + 1}", TipoJugador.IA))
+                    self.players = players
                     return players
             print("Por favor, ingresa un número válido entre 1 y 4 para el número de jugadores y de IA.")
 
@@ -114,12 +118,12 @@ class Juego:
         return False
 
     def movimiento_de_jugador(self, jugador, jugadores):
-        #TODO: Remove before production
-        for option, card in self.obtener_posibles_movimientos(jugador):
-                if option == "descartar":
-                    print(f"Descartar carta: {card}")
-                elif option == "tomar_carta":
-                    print("Tomar una carta del mazo")
+        # TODO: Remove before production
+        # for option, card in self.obtener_posibles_movimientos(jugador):
+        #         if option == "descartar":
+        #             print(f"Descartar carta: {card}")
+        #         elif option == "tomar_carta":
+        #             print("Tomar una carta del mazo")
 
         ultima_carta_de_la_pila = self.pila.cartas[-1]
 
@@ -137,7 +141,6 @@ class Juego:
         print("| 0. Salir del juego                         |")
         print("| __________________________________________ |")
         print()
-
 
         player_round = True
         while player_round:
@@ -300,75 +303,87 @@ class Juego:
         mejor_color = max(colores, key=colores.get)
         return mejor_color
 
-    def obtener_decision_aleatoria_IA(self, jugador):
-        pass
+    def children(self):
+        jugador = self.players[self.current_player]
+        jugadores = self.players
+
+        options = self.obtener_posibles_movimientos(jugador)
+        children = []
+
+        for _ in options:
+            child = copy.deepcopy(self)
+            child.movimiento_de_jugador(jugador, jugadores)
+            children.append(child)
+
+        return children
 
     def iniciar(self):
         self.obtener_primera_carta()
-        jugadores = self.obtener_jugadores()
-        self.repartir_cartas(jugadores)
-
-        current_player = 0
+        self.players = self.obtener_jugadores()
+        self.repartir_cartas(self.players)
 
         while True:
             limpiar.clear_console()
             print("| ------------------------------------------ |")
-            print(f"| Turno del jugador {current_player + 1}:                       |")
+            print(f"| Turno del jugador {self.current_player + 1}:                       |")
 
-            current_player_obj = jugadores[current_player]
+            current_player_obj = self.players[self.current_player]
 
-            self.movimiento_de_jugador(current_player_obj, jugadores)
+            print(self.children())
+
+            self.movimiento_de_jugador(current_player_obj, self.players)
 
             ultima_carta_jugada = self.pila.cartas[-1]
 
-            for jugador in jugadores:
+            for jugador in self.players:
                 if len(jugador.cartas) == 0:
                     print(f"¡{jugador.nombre} ha ganado el juego!")
                     return
 
             if isinstance(ultima_carta_jugada, CartaAccion):
-                if ultima_carta_jugada.accion == "Reversa" and len(jugadores) == 2:
-                    current_player = (current_player + 1) % len(jugadores)
+                if ultima_carta_jugada.accion == "Reversa" and len(self.players) == 2:
+                    self.current_player = (self.current_player + 1) % len(self.players)
                 if ultima_carta_jugada.accion == "Reversa":
-                    jugadores = jugadores[::-1]
-                    if current_player == 0:
-                        current_player = len(jugadores) - 1
+                    self.players = self.players[::-1]
+                    if self.current_player == 0:
+                        self.current_player = len(self.players) - 1
                     else:
-                        current_player -= 1
+                        self.current_player -= 1
                 if ultima_carta_jugada.accion == "Ø":
-                    current_player += 1
+                    self.current_player += 1
                     print(
-                        f"El jugador {1 if current_player >= len(jugadores) else current_player + 1} pierde su turno.")
+                        f"El jugador {1 if self.current_player >= len(self.players) else self.current_player + 1} pierde su turno.")
                 if ultima_carta_jugada.accion == "+2":
                     for _ in range(2):
                         carta = self.mazo.cartas.pop(1)
-                        if current_player + 1 >= len(jugadores):
-                            jugadores[current_player].cartas.append(carta)
+                        if self.current_player + 1 >= len(self.players):
+                            self.players[self.current_player].cartas.append(carta)
                         else:
-                            jugadores[current_player + 1].cartas.append(carta)
+                            self.players[self.current_player + 1].cartas.append(carta)
 
-                    current_player += 1
+                    self.current_player += 1
+
                     print(
-                        f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} se le añaden dos cartas.")
+                        f"Al jugador {1 if self.current_player >= len(self.players) else self.current_player + 1} se le añaden dos cartas.")
                     print(
-                        f"El jugador {1 if current_player >= len(jugadores) else current_player + 1} pierde su turno.")
+                        f"El jugador {1 if self.current_player >= len(self.players) else self.current_player + 1} pierde su turno.")
 
             if isinstance(ultima_carta_jugada, Comodin):
                 if ultima_carta_jugada.valor == "+4":
                     for _ in range(4):
                         carta = self.mazo.cartas.pop(1)
-                        if current_player + 1 >= len(jugadores):
-                            jugadores[0].cartas.append(carta)
+                        if self.current_player + 1 >= len(self.players):
+                            self.players[0].cartas.append(carta)
                         else:
-                            jugadores[current_player + 1].cartas.append(carta)
+                            self.players[self.current_player + 1].cartas.append(carta)
 
-                    current_player += 1
+                    self.current_player += 1
 
                     limpiar.clear_console()
                     print(
-                        f"Al jugador {1 if current_player >= len(jugadores) else current_player + 1} se le añaden cuatro cartas.")
+                        f"Al jugador {1 if self.current_player >= len(self.players) else self.current_player + 1} se le añaden cuatro cartas.")
                     print(
-                        f"El jugador {1 if current_player >= len(jugadores) else current_player + 1} pierde su turno.")
+                        f"El jugador {1 if self.current_player >= len(self.players) else self.current_player + 1} pierde su turno.")
 
                     print("Seleccione el color para cambiar la pila:")
                     print("1. Rojo")
@@ -440,4 +455,4 @@ class Juego:
                             else:
                                 print("Ingrese una opción válida (1, 2, 3 o 4)")
 
-            current_player = (current_player + 1) % len(jugadores)
+            self.current_player = (self.current_player + 1) % len(self.players)
