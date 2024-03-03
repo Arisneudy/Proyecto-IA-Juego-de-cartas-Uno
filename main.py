@@ -1,5 +1,5 @@
 from juego import Juego
-from  Herramientas import limpiar
+from Herramientas import limpiar
 
 if __name__ == "__main__":
     continuar = True

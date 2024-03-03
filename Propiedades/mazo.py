@@ -3,7 +3,6 @@ from Propiedades.carta import Carta
 from Propiedades.carta import CartaAccion
 from Propiedades.carta import Comodin
 
-
 class Mazo:
     def __init__(self):
         self.cartas = []
@@ -41,5 +40,6 @@ class Mazo:
     def imprimir_mazo(self):
         for carta in self.cartas:
             print(carta)
+
     def imprimir_cuenta_del_mazo(self):
         print(len(self.cartas))

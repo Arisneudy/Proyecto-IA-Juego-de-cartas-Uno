@@ -13,5 +13,6 @@ class Pila:
             return self.cartas.pop()
         else:
             return None
+
     def barajar(self):
         random.shuffle(self.cartas)
