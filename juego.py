@@ -3,14 +3,14 @@ import random
 
 from Propiedades.Funcionalidades.func import GestorDeJuego
 from Propiedades.carta import CartaAccion, Comodin
-from Propiedades.jugador import Jugador, TipoJugador
+from Propiedades.jugador import TipoJugador
 from Herramientas import limpiar
-from Propiedades.mazo import Mazo
-from Propiedades.pila import Pila
+from Propiedades.IA.ia import IA
 
 class Juego:
     def __init__(self):
         self.gestor_de_juego = GestorDeJuego()
+        self.IA = IA(10)
 
     def repartir_cartas(self, jugadores):
         cartas_por_jugador = 7
@@ -86,7 +86,6 @@ class Juego:
                         print("| 0. Salir del juego                         |")
                         print("| __________________________________________ |")
                         print()
-                        break
                     else:
                         print("El mazo está vacío, se está barajando la pila...")
                         self.gestor_de_juego.pila.barajar()
@@ -286,9 +285,6 @@ class Juego:
             else:
                 print("Opción inválida. Por favor, elige un número entre 1 y 6.")
 
-    def obtener_decision_aleatoria_IA(self, jugador):
-        pass
-
 
     def iniciar(self):
         self.gestor_de_juego.obtener_primera_carta()
@@ -363,26 +359,32 @@ class Juego:
                     print("3. Verde")
                     print("4. Amarillo")
 
-                    while True:
-                        color_option = input("Elija una opción: ")
-                        if color_option.isdigit():
-                            color_option = int(color_option)
-                            if 1 <= color_option <= 4:
-                                if color_option == 1:
-                                    self.color_pila = "Rojo"
-                                elif color_option == 2:
-                                    self.color_pila = "Azul"
-                                elif color_option == 3:
-                                    self.color_pila = "Verde"
-                                elif color_option == 4:
-                                    self.color_pila = "Amarillo"
+                    if current_player_obj.tipo == TipoJugador.IA:
+                        mejor_opcion_de_la_pila = self.IA.obtener_mejor_color_de_pila_para_IA(current_player_obj)
 
-                                print(f"La pila ha cambiado de color a {self.color_pila}.")
-                                break
+                        self.color_pila = mejor_opcion_de_la_pila
+                        print(f"La pila ha cambiado de color a {self.color_pila}.")
+                    else:
+                        while True:
+                            color_option = input("Elija una opción: ")
+                            if color_option.isdigit():
+                                color_option = int(color_option)
+                                if 1 <= color_option <= 4:
+                                    if color_option == 1:
+                                        self.color_pila = "Rojo"
+                                    elif color_option == 2:
+                                        self.color_pila = "Azul"
+                                    elif color_option == 3:
+                                        self.color_pila = "Verde"
+                                    elif color_option == 4:
+                                        self.color_pila = "Amarillo"
+
+                                    print(f"La pila ha cambiado de color a {self.color_pila}.")
+                                    break
+                                else:
+                                    print("Ingrese una opción válida (1, 2, 3 o 4)")
                             else:
                                 print("Ingrese una opción válida (1, 2, 3 o 4)")
-                        else:
-                            print("Ingrese una opción válida (1, 2, 3 o 4)")
 
                 elif ultima_carta_jugada.valor == "Comodin":
                     limpiar.clear_console()
@@ -392,25 +394,32 @@ class Juego:
                     print("3. Verde")
                     print("4. Amarillo")
 
-                    while True:
-                        color_option = input("Elija una opción: ")
-                        if color_option.isdigit():
-                            color_option = int(color_option)
-                            if 1 <= color_option <= 4:
-                                if color_option == 1:
-                                    self.color_pila = "Rojo"
-                                elif color_option == 2:
-                                    self.color_pila = "Azul"
-                                elif color_option == 3:
-                                    self.color_pila = "Verde"
-                                elif color_option == 4:
-                                    self.color_pila = "Amarillo"
+                    if current_player_obj.tipo == TipoJugador.IA:
+                        mejor_opcion_de_la_pila = self.IA.obtener_mejor_color_de_pila_para_IA(current_player_obj)
 
-                                print(f"La pila ha cambiado de color a {self.color_pila}.")
-                                break
+                        self.color_pila = mejor_opcion_de_la_pila
+                        print(f"La pila ha cambiado de color a {self.color_pila}.")
+
+                    else:
+                        while True:
+                            color_option = input("Elija una opción: ")
+                            if color_option.isdigit():
+                                color_option = int(color_option)
+                                if 1 <= color_option <= 4:
+                                    if color_option == 1:
+                                        self.color_pila = "Rojo"
+                                    elif color_option == 2:
+                                        self.color_pila = "Azul"
+                                    elif color_option == 3:
+                                        self.color_pila = "Verde"
+                                    elif color_option == 4:
+                                        self.color_pila = "Amarillo"
+
+                                    print(f"La pila ha cambiado de color a {self.color_pila}.")
+                                    break
+                                else:
+                                    print("Ingrese una opción válida (1, 2, 3 o 4)")
                             else:
                                 print("Ingrese una opción válida (1, 2, 3 o 4)")
-                        else:
-                            print("Ingrese una opción válida (1, 2, 3 o 4)")
 
             current_player = (current_player + 1) % len(jugadores)

@@ -64,6 +64,16 @@ class IA:
                 acciones_posibles.append(accion[1])
         return acciones_posibles
 
+    def obtener_mejor_color_de_pila_para_IA(self, jugador):
+        colores = {'Rojo': 0, 'Azul': 0, 'Verde': 0, 'Amarillo': 0}
+
+        for carta in jugador.cartas:
+            if isinstance(carta, Carta):
+                colores[carta.color] += 1
+
+        mejor_color = max(colores, key=colores.get)
+        return mejor_color
+
     def evaluar(self, juego):
         valor = 0
         # Heurística 1: Preferir cartas con el mismo color que la carta superior de la pila

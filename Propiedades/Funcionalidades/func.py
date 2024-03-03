@@ -12,10 +12,14 @@ class GestorDeJuego:
 
     def obtener_primera_carta(self):
         self.mazo.barajar()
+        primera_carta = None
         for carta in self.mazo.cartas:
             if not isinstance(carta, (CartaAccion, Comodin)):
-                self.pila.cartas.append(carta)
+                primera_carta = carta
                 break
+        if primera_carta:
+            self.mazo.cartas.remove(primera_carta)
+            self.pila.cartas.append(primera_carta)
 
     def obtener_jugadores(self):
         while True:
