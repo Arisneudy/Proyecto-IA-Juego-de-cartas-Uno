@@ -211,11 +211,11 @@ class Juego:
             return
 
         # TODO: Remove before production
-        for option, card in self.obtener_posibles_movimientos(jugador):
-                if option == "descartar":
-                    print(f"Descartar carta: {card}")
-                elif option == "tomar_carta":
-                    print("Tomar una carta del mazo")
+        # for option, card in self.obtener_posibles_movimientos(jugador):
+        #         if option == "descartar":
+        #             print(f"Descartar carta: {card}")
+        #         elif option == "tomar_carta":
+        #             print("Tomar una carta del mazo")
 
         ultima_carta_de_la_pila = self.pila.cartas[-1]
 
@@ -237,11 +237,6 @@ class Juego:
         player_round = True
         while player_round:
             if (jugador.tipo == TipoJugador.IA):
-                # posibles_movimientos_IA = self.obtener_posibles_movimientos(jugador)
-                # movimiento_IA = random.choice(posibles_movimientos_IA)
-
-
-
                 if decision is not None:
                     carta_a_descartar = None
                     for carta in jugador.cartas:
@@ -438,7 +433,7 @@ class Juego:
         minimax_solver = MinimaxSolver(self.players[self.current_player].nombre)
         estado = copy.deepcopy(self)
         decision = minimax_solver.resolver(estado)
-        print(f"{self.players[self.current_player].nombre} ha jugado {decision}")
+        # print(f"{self.players[self.current_player].nombre} ha jugado {decision}")
         return decision
 
     def iniciar(self):
