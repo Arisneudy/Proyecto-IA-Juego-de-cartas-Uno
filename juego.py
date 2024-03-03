@@ -1,12 +1,14 @@
 import time
 import random
 import copy
+import numpy as np
 
 from Propiedades.carta import Comodin, Carta, CartaAccion
 from Propiedades.mazo import Mazo
 from Propiedades.jugador import Jugador, TipoJugador
 from Propiedades.pila import Pila
 from Herramientas import limpiar
+from Propiedades.minimax_solver import MinimaxSolver
 
 
 class Juego:
@@ -52,70 +54,6 @@ class Juego:
             for jugador in jugadores:
                 carta = self.mazo.cartas.pop(0)
                 jugador.cartas.append(carta)
-
-    # def es_carta_valida_para_descartar(self, carta_descartar):
-    #     carta_en_pila = self.pila.cartas[-1]
-    #
-    #     if isinstance(carta_descartar, Comodin):
-    #         return True
-    #
-    #     if isinstance(carta_en_pila, Comodin):
-    #         if isinstance(carta_descartar, Carta) or isinstance(carta_descartar, CartaAccion):
-    #             if carta_descartar.color == self.color_pila:
-    #                 return True
-    #         return False
-    #
-    #     if isinstance(carta_descartar, CartaAccion) or isinstance(carta_en_pila, CartaAccion):
-    #         if isinstance(carta_descartar, CartaAccion) and isinstance(carta_en_pila, CartaAccion):
-    #             return carta_descartar.color == carta_en_pila.color or carta_descartar.accion == carta_en_pila.accion
-    #         elif isinstance(carta_descartar, CartaAccion):
-    #             return carta_descartar.color == carta_en_pila.color
-    #         elif isinstance(carta_en_pila, CartaAccion):
-    #             return carta_descartar.color == carta_en_pila.color
-    #
-    #     if isinstance(carta_descartar, Carta) and not (
-    #             isinstance(carta_en_pila, CartaAccion) or isinstance(carta_en_pila, Comodin)):
-    #         return carta_descartar.color == carta_en_pila.color or carta_descartar.valor == carta_en_pila.valor
-    #
-    #     if isinstance(carta_descartar, Carta) and isinstance(carta_en_pila, CartaAccion):
-    #         return carta_descartar.color == carta_en_pila.color
-    #
-    #     return False
-    #
-    # def validar_y_descartar_carta(self, jugador, opcion_descartar):
-    #     opcion_descartar = str(opcion_descartar)
-    #
-    #     if opcion_descartar.isdigit():
-    #         opcion_descartar = int(opcion_descartar) - 1
-    #         if 0 <= opcion_descartar < len(jugador.cartas):
-    #             carta_descartar = jugador.cartas[opcion_descartar]
-    #
-    #             if isinstance(carta_descartar, Comodin):
-    #                 jugador.cartas.remove(carta_descartar)
-    #                 self.pila.agregar_carta(carta_descartar)
-    #                 print(f"{jugador.nombre} descartó la carta: {carta_descartar}")
-    #                 return True
-    #
-    #             if self.color_pila is not None:
-    #                 if carta_descartar.color == self.color_pila:
-    #                     jugador.cartas.remove(carta_descartar)
-    #                     self.pila.agregar_carta(carta_descartar)
-    #                     print(f"{jugador.nombre} descartó la carta: {carta_descartar}")
-    #
-    #                     self.color_pila = None
-    #                     return True
-    #                 else:
-    #                     print("Debe jugar una carta del color de la pila.")
-    #                     return False
-    #             else:
-    #                 if self.es_carta_valida_para_descartar(carta_descartar):
-    #                     jugador.cartas.remove(carta_descartar)
-    #                     self.pila.agregar_carta(carta_descartar)
-    #                     print(f"{jugador.nombre} descartó la carta: {carta_descartar}")
-    #                     return True
-    #
-    #     print("Seleccione una carta válida")
-    #     return False
 
     def es_carta_valida_para_descartar(self, carta_descartar, child=None):
         if child:
@@ -193,8 +131,8 @@ class Juego:
         print("Seleccione una carta válida")
         return False
 
-    def movimiento_de_jugador(self, jugador, jugadores, is_prediction=False, options=None, child=None):
-        if is_prediction and options is not None:
+    def movimiento_de_jugador(self, jugador, jugadores, is_prediction=False, options=None, child=None, decision=None):
+        if is_prediction and options is not None and decision is None:
             if options[0] == "tomar_carta":
                 carta = child.mazo.cartas.pop(0)
                 if len(child.mazo.cartas) != 0:
@@ -299,11 +237,18 @@ class Juego:
         player_round = True
         while player_round:
             if (jugador.tipo == TipoJugador.IA):
-                posibles_movimientos_IA = self.obtener_posibles_movimientos(jugador)
-                movimiento_IA = random.choice(posibles_movimientos_IA)
+                # posibles_movimientos_IA = self.obtener_posibles_movimientos(jugador)
+                # movimiento_IA = random.choice(posibles_movimientos_IA)
 
-                if movimiento_IA[0] == "descartar":
-                    carta_a_descartar = movimiento_IA[1]
+
+
+                if decision is not None:
+                    carta_a_descartar = None
+                    for carta in jugador.cartas:
+                        if str(carta) == str(decision):
+                            carta_a_descartar = carta
+                            break
+
                     self.validar_y_descartar_carta(jugador, jugador.cartas.index(carta_a_descartar) + 1)
                     return
 
@@ -457,6 +402,17 @@ class Juego:
         mejor_color = max(colores, key=colores.get)
         return mejor_color
 
+    def obtener_ganador(self):
+        for jugador in self.players:
+            if len(jugador.cartas) == 0:
+                return jugador.nombre
+
+    def es_terminal(self):
+        for jugador in self.players:
+            if len(jugador.cartas) == 0:
+                return True
+        return False
+
     def children(self):
         jugador = self.players[self.current_player]
         options = self.obtener_posibles_movimientos(jugador)
@@ -465,9 +421,25 @@ class Juego:
         for option in options:
             child = copy.deepcopy(self)
             child.movimiento_de_jugador(child.players[child.current_player], child.players, True, option, child)
-            children.append(child)
+            children.append((option[1], child))
 
         return children
+
+    def heuristic(self, nombre_jugador):
+        heur = 0
+        for jugador in self.players:
+            if jugador.nombre == nombre_jugador:
+                heur -= len(jugador.cartas)
+            else:
+                heur += len(jugador.cartas)
+        return heur
+
+    def obtener_decision_de_ai_minimax(self):
+        minimax_solver = MinimaxSolver(self.players[self.current_player].nombre)
+        estado = copy.deepcopy(self)
+        decision = minimax_solver.resolver(estado)
+        print(f"{self.players[self.current_player].nombre} ha jugado {decision}")
+        return decision
 
     def iniciar(self):
         self.obtener_primera_carta()
@@ -482,9 +454,10 @@ class Juego:
             current_player_obj = self.players[self.current_player]
 
             if current_player_obj.tipo == TipoJugador.IA:
-                print(self.children())
-
-            self.movimiento_de_jugador(current_player_obj, self.players)
+                ai_decision = self.obtener_decision_de_ai_minimax()
+                self.movimiento_de_jugador(current_player_obj, self.players, decision=ai_decision)
+            else:
+                self.movimiento_de_jugador(current_player_obj, self.players)
 
             ultima_carta_jugada = self.pila.cartas[-1]
 
