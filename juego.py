@@ -421,7 +421,14 @@ class Juego:
 
         return children
 
-    def heuristic(self, nombre_jugador):
+    def obtener_decision_de_ai_minimax(self):
+        minimax_solver = MinimaxSolver(self.players[self.current_player].nombre)
+        estado = copy.deepcopy(self)
+        decision = minimax_solver.resolver(estado, self.minimax_time)
+        # print(f"{self.players[self.current_player].nombre} ha jugado {decision}")
+        return decision
+
+    def heuristica_distancia_para_ganar(self, nombre_jugador):
         heur = 0
         for jugador in self.players:
             if jugador.nombre == nombre_jugador:
@@ -430,12 +437,41 @@ class Juego:
                 heur += len(jugador.cartas)
         return heur
 
-    def obtener_decision_de_ai_minimax(self):
-        minimax_solver = MinimaxSolver(self.players[self.current_player].nombre)
-        estado = copy.deepcopy(self)
-        decision = minimax_solver.resolver(estado, self.minimax_time)
-        # print(f"{self.players[self.current_player].nombre} ha jugado {decision}")
-        return decision
+    def heuristica_balance_de_color(self, jugador):
+        colores = {'Rojo': 0, 'Azul': 0, 'Verde': 0, 'Amarillo': 0}
+
+        for carta in jugador.cartas:
+            if isinstance(carta, Carta):
+                colores[carta.color] += 1
+
+        max_cuenta_de_color = max(colores.values())
+        min_cuenta_de_color = min(colores.values())
+
+        balance_score = max_cuenta_de_color - min_cuenta_de_color
+
+        return balance_score
+
+    def heuristica_variedad_de_cartas(self, jugador):
+        puntuacion_de_variedad = 0
+        action_cards = []
+
+        for carta in jugador.cartas:
+            if isinstance(carta, CartaAccion):
+                action_cards.append(carta.accion)
+
+        puntuacion_de_variedad = len(action_cards) / len(jugador.cartas)
+
+        return puntuacion_de_variedad
+
+    def heuristica_ventaja_de_turno(self, jugador):
+        puntuacion_de_orden_de_turno = 0
+        if len(self.players) > 2:
+            if jugador == self.players[0]:
+                puntuacion_de_orden_de_turno += 1
+            elif jugador == self.players[-1]:
+                puntuacion_de_orden_de_turno -= 1
+
+        return puntuacion_de_orden_de_turno
 
     def iniciar(self):
         self.obtener_primera_carta()

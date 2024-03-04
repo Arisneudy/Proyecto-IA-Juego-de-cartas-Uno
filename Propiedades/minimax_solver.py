@@ -16,7 +16,7 @@ class MinimaxSolver():
             return None, estado.obtener_ganador()
 
         if profundidad == 0:
-            return None, estado.heuristic(self.player_name)
+            return None, estado.heuristica_distancia_para_ganar(self.player_name)
 
         mayor_hijo, mayor_utilidad = None, -np.inf
 
@@ -47,7 +47,7 @@ class MinimaxSolver():
         minimo_hijo, menor_utilidad = None, np.inf
 
         if profundidad == 0:
-            return None, estado.heuristic(self.player_name)
+            return None, estado.heuristica_distancia_para_ganar(self.player_name)
 
         for option, child in estado.children():
 
