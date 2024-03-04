@@ -18,6 +18,7 @@ class Juego:
         self.color_pila = None
         self.current_player = 0
         self.players = []
+        self.minimax_time = 10
 
     def obtener_primera_carta(self):
         self.mazo.barajar()
@@ -432,7 +433,7 @@ class Juego:
     def obtener_decision_de_ai_minimax(self):
         minimax_solver = MinimaxSolver(self.players[self.current_player].nombre)
         estado = copy.deepcopy(self)
-        decision = minimax_solver.resolver(estado)
+        decision = minimax_solver.resolver(estado, self.minimax_time)
         # print(f"{self.players[self.current_player].nombre} ha jugado {decision}")
         return decision
 

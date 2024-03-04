@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 class MinimaxSolver():
     def __init__(self, player_name):
@@ -8,6 +9,9 @@ class MinimaxSolver():
         self.max_time = None
 
     def maximizar(self, estado, alfa, beta, profundidad):
+        if time.time() - self.time_start >= self.max_time:
+            raise StopIteration("Se quedo sin tiempo!")
+
         if estado.es_terminal():
             return None, estado.obtener_ganador()
 
@@ -34,6 +38,9 @@ class MinimaxSolver():
         return mayor_hijo, mayor_utilidad
 
     def minimizar(self, estado, alfa, beta, profundidad):
+        if time.time() - self.time_start >= self.max_time:
+            raise StopIteration("Se quedo sin tiempo!")
+
         if estado.es_terminal():
             return None, estado.obtener_ganador()
 
@@ -59,6 +66,14 @@ class MinimaxSolver():
 
         return minimo_hijo, menor_utilidad
 
-    def resolver(self, estado):
-        hijo, _ = self.maximizar(estado, -np.inf, np.inf, 2)
-        return hijo
+    def resolver(self, estado, max_time):
+        self.time_start = time.time()
+        self.max_time = max_time
+
+        for profundidad in range(2, 10000):
+            try:
+                mejor_opcion, _ = self.maximizar(estado, -np.inf, np.inf, profundidad)
+            except StopIteration:
+                break
+
+        return mejor_opcion
