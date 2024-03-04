@@ -1,7 +1,5 @@
 import time
-import random
 import copy
-import numpy as np
 
 from Propiedades.carta import Comodin, Carta, CartaAccion
 from Propiedades.mazo import Mazo
@@ -277,6 +275,8 @@ class Juego:
                         print("| 0. Salir del juego                         |")
                         print("| __________________________________________ |")
                         print()
+                        if jugador.tipo == TipoJugador.IA:
+                            return
                     else:
                         print("El mazo está vacío, se está barajando la pila...")
                         self.pila.barajar()
