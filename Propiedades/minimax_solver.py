@@ -15,24 +15,24 @@ class MinimaxSolver():
         if estado.es_terminal():
             return None, estado.obtener_ganador()
 
-        if profundidad == 0:
-            return None, estado.heuristica_distancia_para_ganar(self.player_name)
+        if profundidad <= 0:
+            heuristica_valor = estado.heuristica_distancia_para_ganar(self.player_name)
+            heuristica_valor += estado.heuristica_balance_de_color(estado.players[estado.current_player])
+            heuristica_valor += estado.heuristica_variedad_de_cartas(estado.players[estado.current_player])
+            heuristica_valor += estado.heuristica_ventaja_de_turno(estado.players[estado.current_player])
+            return None, heuristica_valor
 
         mayor_hijo, mayor_utilidad = None, -np.inf
 
         for option, child in estado.children():
-
             if child.players[child.current_player].nombre == self.player_name:
-                _, utilidad = self.maximizar(estado, alfa, beta, profundidad - 1)
+                _, utilidad = self.maximizar(child, alfa, beta, profundidad - 1)
             else:
-                _, utilidad = self.minimizar(estado, alfa, beta, profundidad - 1)
-
+                _, utilidad = self.minimizar(child, alfa, beta, profundidad - 1)
             if utilidad > mayor_utilidad:
                 mayor_hijo, mayor_utilidad = option, utilidad
-
             if mayor_utilidad >= beta:
                 break
-
             alfa = max(alfa, mayor_utilidad)
 
         return mayor_hijo, mayor_utilidad
@@ -46,22 +46,22 @@ class MinimaxSolver():
 
         minimo_hijo, menor_utilidad = None, np.inf
 
-        if profundidad == 0:
-            return None, estado.heuristica_distancia_para_ganar(self.player_name)
+        if profundidad <= 0:
+            heuristica_valor = estado.heuristica_distancia_para_ganar(self.player_name)
+            heuristica_valor += estado.heuristica_balance_de_color(estado.players[estado.current_player])
+            heuristica_valor += estado.heuristica_variedad_de_cartas(estado.players[estado.current_player])
+            heuristica_valor += estado.heuristica_ventaja_de_turno(estado.players[estado.current_player])
+            return None, heuristica_valor
 
         for option, child in estado.children():
-
             if child.players[child.current_player].nombre == self.player_name:
-                _, utilidad = self.maximizar(estado, alfa, beta, profundidad - 1)
+                _, utilidad = self.maximizar(child, alfa, beta, profundidad - 1)
             else:
-                _, utilidad = self.minimizar(estado, alfa, beta, profundidad - 1)
-
+                _, utilidad = self.minimizar(child, alfa, beta, profundidad - 1)
             if utilidad < menor_utilidad:
                 minimo_hijo, menor_utilidad = option, utilidad
-
             if menor_utilidad <= alfa:
                 break
-
             beta = min(beta, menor_utilidad)
 
         return minimo_hijo, menor_utilidad
