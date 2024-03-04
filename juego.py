@@ -18,7 +18,7 @@ class Juego:
         self.color_pila = None
         self.current_player = 0
         self.players = []
-        self.minimax_time = 10
+        self.minimax_time = 3
 
     def obtener_primera_carta(self):
         self.mazo.barajar()
