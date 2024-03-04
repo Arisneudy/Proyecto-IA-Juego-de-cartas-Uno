@@ -458,6 +458,8 @@ class Juego:
         for carta in jugador.cartas:
             if isinstance(carta, CartaAccion):
                 action_cards.append(carta.accion)
+            if isinstance(carta, Comodin):
+                action_cards.append(carta.valor)
 
         puntuacion_de_variedad = len(action_cards) / len(jugador.cartas)
 
