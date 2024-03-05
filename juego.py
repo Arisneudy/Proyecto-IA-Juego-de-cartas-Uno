@@ -406,6 +406,9 @@ class Juego:
     def es_terminal(self):
         for jugador in self.players:
             if len(jugador.cartas) == 0:
+                limpiar.clear_console()
+                print(f"¡{jugador.nombre} ha dicho UNO y ganado el juego!")
+                time.sleep(1)
                 return True
         return False
 
