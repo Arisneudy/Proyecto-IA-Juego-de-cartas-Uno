@@ -16,6 +16,7 @@ class Juego:
         self.color_pila = None
         self.current_player = 0
         self.players = []
+        self.cartas_por_jugador = 7
         self.minimax_time = 3
 
     def obtener_primera_carta(self):
@@ -47,9 +48,7 @@ class Juego:
             print("Por favor, ingresa un número válido entre 1 y 4 para el número de jugadores y de IA.")
 
     def repartir_cartas(self, jugadores):
-        cartas_por_jugador = 7
-
-        for _ in range(cartas_por_jugador):
+        for _ in range(self.cartas_por_jugador):
             for jugador in jugadores:
                 carta = self.mazo.cartas.pop(0)
                 jugador.cartas.append(carta)
@@ -205,16 +204,7 @@ class Juego:
 
                                 child.color_pila = mejor_opcion_de_la_pila
                         child.current_player = (child.current_player + 1) % len(child.players)
-                else:
-                    print("")
             return
-
-        # TODO: Remove before production
-        # for option, card in self.obtener_posibles_movimientos(jugador):
-        #         if option == "descartar":
-        #             print(f"Descartar carta: {card}")
-        #         elif option == "tomar_carta":
-        #             print("Tomar una carta del mazo")
 
         ultima_carta_de_la_pila = self.pila.cartas[-1]
 
@@ -393,6 +383,8 @@ class Juego:
 
         for carta in jugador.cartas:
             if isinstance(carta, Carta):
+                colores[carta.color] += 1
+            if isinstance(carta, CartaAccion):
                 colores[carta.color] += 1
 
         mejor_color = max(colores, key=colores.get)
