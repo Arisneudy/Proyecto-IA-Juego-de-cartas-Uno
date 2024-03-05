@@ -394,7 +394,8 @@ class Juego:
         for jugador in self.players:
             if len(jugador.cartas) == 0:
                 return jugador.nombre
-
+            
+    # es_terminal: Valida si ya no hay mas jugadas legales en el juego, en este caso, si ya un jugador llegó a 0 cartas.
     def es_terminal(self):
         for jugador in self.players:
             if len(jugador.cartas) == 0:
@@ -403,7 +404,8 @@ class Juego:
                 time.sleep(1)
                 return True
         return False
-
+    
+    #Children: se crea una copia del estado actual del juego y retorna un arreglo con todos los posibles estados del juego.
     def children(self):
         jugador = self.players[self.current_player]
         options = self.obtener_posibles_movimientos(jugador)
@@ -415,14 +417,16 @@ class Juego:
             children.append((option[1], child))
 
         return children
-
+    
+    #obtener_decision_de_ai_minimax: se evalua cual es la mejor opción de los estados obtenidos de la función children.
     def obtener_decision_de_ai_minimax(self):
         minimax_solver = MinimaxSolver(self.players[self.current_player].nombre)
         estado = copy.deepcopy(self)
         decision = minimax_solver.resolver(estado, self.minimax_time)
         # print(f"{self.players[self.current_player].nombre} ha jugado {decision}")
         return decision
-
+    
+    #heuristica_distancia_para_ganar: Evalua que la IA tenga la menor cantidad de cartas posibles y los otros jugador tengan la mayor cantidad de cartas posibles.
     def heuristica_distancia_para_ganar(self, nombre_jugador):
         heur = 0
         for jugador in self.players:
@@ -431,7 +435,7 @@ class Juego:
             else:
                 heur += len(jugador.cartas)
         return heur
-
+    #heuristica_balance_de_color: Asigna un balance de cartas a cada color.
     def heuristica_balance_de_color(self, jugador):
         colores = {'Rojo': 0, 'Azul': 0, 'Verde': 0, 'Amarillo': 0}
 
@@ -445,7 +449,8 @@ class Juego:
         balance_score = max_cuenta_de_color - min_cuenta_de_color
 
         return balance_score
-
+    #heuristica_variedad_de_cartas: Evalua la variedad de cartas que tiene la IA en el momento, 
+    #mientras más cartas de acción y comodines tiene, mós alta es la puntuación de variedad
     def heuristica_variedad_de_cartas(self, jugador):
         puntuacion_de_variedad = 0
         action_cards = []
@@ -459,16 +464,6 @@ class Juego:
         puntuacion_de_variedad = len(action_cards) / len(jugador.cartas)
 
         return puntuacion_de_variedad
-
-    def heuristica_ventaja_de_turno(self, jugador):
-        puntuacion_de_orden_de_turno = 0
-        if len(self.players) > 2:
-            if jugador == self.players[0]:
-                puntuacion_de_orden_de_turno += 1
-            elif jugador == self.players[-1]:
-                puntuacion_de_orden_de_turno -= 1
-
-        return puntuacion_de_orden_de_turno
 
     def iniciar(self):
         self.obtener_primera_carta()

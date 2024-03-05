@@ -22,7 +22,6 @@ class MinimaxSolver():
             heuristica_valor = estado.heuristica_distancia_para_ganar(self.player_name)
             heuristica_valor += estado.heuristica_balance_de_color(estado.players[estado.current_player])
             heuristica_valor += estado.heuristica_variedad_de_cartas(estado.players[estado.current_player])
-            heuristica_valor += estado.heuristica_ventaja_de_turno(estado.players[estado.current_player])
             return None, heuristica_valor
 
 
@@ -58,7 +57,6 @@ class MinimaxSolver():
             heuristica_valor = estado.heuristica_distancia_para_ganar(self.player_name)
             heuristica_valor += estado.heuristica_balance_de_color(estado.players[estado.current_player])
             heuristica_valor += estado.heuristica_variedad_de_cartas(estado.players[estado.current_player])
-            heuristica_valor += estado.heuristica_ventaja_de_turno(estado.players[estado.current_player])
             return None, heuristica_valor
 
         for option, child in estado.children():
