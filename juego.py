@@ -366,6 +366,7 @@ class Juego:
             else:
                 print("Opción inválida. Por favor, elige un número entre 1 y 6.")
 
+    # Esta funcion obtiene los posibles movimientos que puede hacer un jugador en su turno.
     def obtener_posibles_movimientos(self, jugador):
         posibles_movimientos = []
 
@@ -378,6 +379,7 @@ class Juego:
 
         return posibles_movimientos
 
+    # Esta funcion obtiene el mejor color de pila para la IA.
     def obtener_mejor_color_de_pila_para_IA(self, jugador):
         colores = {'Rojo': 0, 'Azul': 0, 'Verde': 0, 'Amarillo': 0}
 
@@ -390,6 +392,7 @@ class Juego:
         mejor_color = max(colores, key=colores.get)
         return mejor_color
 
+    # esta funcion obtiene el ganador del juego.
     def obtener_ganador(self):
         for jugador in self.players:
             if len(jugador.cartas) == 0:
@@ -435,6 +438,7 @@ class Juego:
             else:
                 heur += len(jugador.cartas)
         return heur
+
     #heuristica_balance_de_color: Asigna un balance de cartas a cada color.
     def heuristica_balance_de_color(self, jugador):
         colores = {'Rojo': 0, 'Azul': 0, 'Verde': 0, 'Amarillo': 0}
@@ -449,6 +453,7 @@ class Juego:
         balance_score = max_cuenta_de_color - min_cuenta_de_color
 
         return balance_score
+
     #heuristica_variedad_de_cartas: Evalua la variedad de cartas que tiene la IA en el momento, 
     #mientras más cartas de acción y comodines tiene, mós alta es la puntuación de variedad
     def heuristica_variedad_de_cartas(self, jugador):
